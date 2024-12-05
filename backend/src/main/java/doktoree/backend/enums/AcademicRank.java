@@ -1,0 +1,12 @@
+package doktoree.backend.enums;
+
+public enum AcademicRank {
+
+	PROFESSOR_EMERITUS,
+	FULL_PROFESSOR,
+	ASSOCIATE_PROFESSOR,
+	ASSISTANT_PROFESSOR,
+	TEACHING_ASSISTANT,
+	TEACHING_ASSOCIATE
+	
+}
