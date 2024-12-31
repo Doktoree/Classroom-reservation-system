@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,8 +22,8 @@ public class ReservationController {
 	@Autowired
 	private ReservationServiceImpl reservationService;
 	
-	@GetMapping
-	public ResponseEntity<Response<ReservationDto>> getReservation(@RequestBody Long id){
+	@GetMapping("{id}")
+	public ResponseEntity<Response<ReservationDto>> getReservation(@PathVariable Long id){
 		
 		return ResponseEntity.ok(reservationService.findReservationById(id));
 		

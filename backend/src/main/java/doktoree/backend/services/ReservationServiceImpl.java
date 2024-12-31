@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import doktoree.backend.domain.ColloquiumReservation;
 import doktoree.backend.domain.Reservation;
 import doktoree.backend.dtos.ReservationDto;
 import doktoree.backend.error_response.Response;
@@ -32,16 +31,11 @@ public class ReservationServiceImpl implements ReservationService {
 			throw new EntityNotExistingException("There is not reservation with given ID!");
 		
 		Reservation reservation = optioanalReservation.get();
-		if(reservation instanceof ColloquiumReservation) {
-			
-			ColloquiumReservation colloquiumReservation = (ColloquiumReservation) reservation;
-			response.setMessage("Poruka");
-			return response;
-			
-		}
+		ReservationDto dto = ReservationMapper.mapToReservationDto(reservation);
+		response.setDto(dto);
+		response.setMessage("Reservation successfully found!");
 		
-		
-		return null;
+		return response;
 	}
 
 	@Override

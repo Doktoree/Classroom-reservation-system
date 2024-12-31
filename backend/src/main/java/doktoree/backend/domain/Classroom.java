@@ -1,5 +1,7 @@
 package doktoree.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import doktoree.backend.enums.ClassRoomType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,6 +20,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Classroom {
 
 	@Id
