@@ -6,7 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinColumns;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -33,9 +32,6 @@ public class WorkshopParticipant {
 	private String lastName;
 	
 	@ManyToOne
-	@JoinColumns({
-		@JoinColumn(name = "user_id", referencedColumnName = "user_id"),
-		@JoinColumn(name = "classroom_id", referencedColumnName = "classroom_id")
-	})
+	@JoinColumn(name = "reservation_id")
 	private OtherWorkshopReservation otherWorkshopReservation;
 }

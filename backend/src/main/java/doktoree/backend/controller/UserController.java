@@ -14,10 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import doktoree.backend.dtos.ClassroomDto;
 import doktoree.backend.dtos.UserDto;
 import doktoree.backend.error_response.Response;
-import doktoree.backend.services.ClassroomServiceImpl;
 import doktoree.backend.services.UserServiceImpl;
 
 @RestController

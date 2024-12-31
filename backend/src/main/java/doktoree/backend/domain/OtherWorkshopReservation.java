@@ -3,7 +3,6 @@ package doktoree.backend.domain;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -21,7 +20,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class OtherWorkshopReservation extends Reservation{
 
-	@Column(nullable = false)
+	
 	private String name;
 	
 	@OneToMany(mappedBy = "otherWorkshopReservation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

@@ -21,7 +21,7 @@ import lombok.Setter;
 public class Classroom {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	@Column(name = "class_room_number" ,nullable = false)
