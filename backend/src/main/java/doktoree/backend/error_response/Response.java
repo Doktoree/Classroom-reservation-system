@@ -2,6 +2,7 @@ package doktoree.backend.error_response;
 
 import java.time.LocalTime;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,5 +1,7 @@
 package doktoree.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import doktoree.backend.enums.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,12 +31,15 @@ public class User {
 	@Column(nullable = false)
 	private String email;
 	
+	@JsonIgnore
 	@Column(nullable = false)
 	private String password;
 	
+	@JsonIgnore
 	@Enumerated(EnumType.STRING)
 	private Role role;
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "employee_id", nullable = false)
 	private Employee employee;

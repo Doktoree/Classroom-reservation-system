@@ -1,7 +1,10 @@
 package doktoree.backend.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +12,7 @@ import org.springframework.stereotype.Service;
 import doktoree.backend.domain.Reservation;
 import doktoree.backend.dtos.ReservationDto;
 import doktoree.backend.error_response.Response;
+import doktoree.backend.exceptions.EmptyEntityListException;
 import doktoree.backend.exceptions.EntityNotExistingException;
 import doktoree.backend.exceptions.EntityNotSavedException;
 import doktoree.backend.factory.ReservationFactory;
@@ -64,8 +68,21 @@ public class ReservationServiceImpl implements ReservationService {
 
 	@Override
 	public Response<List<ReservationDto>> getAllReservations() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		List<ReservationDto> reservationDtos = new ArrayList<>();
+		List<Reservation> reservations = reservationRepository.findAll();
+		Response<List<ReservationDto>> response = new Response<>();
+		
+		if(reservations.isEmpty())
+			throw new EmptyEntityListException("There are no reservations!");
+		
+		reservationDtos = reservations.stream().map(ReservationMapper::mapToReservationDto).collect(Collectors.toList());
+		response.setDto(reservationDtos);
+		response.setMessage("All reservations successfully found!");
+		
+		return response;
+		
+		
 	}
 
 	@Override

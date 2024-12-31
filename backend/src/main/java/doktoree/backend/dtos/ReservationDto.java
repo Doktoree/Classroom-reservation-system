@@ -3,6 +3,8 @@ package doktoree.backend.dtos;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import doktoree.backend.domain.Classroom;
 import doktoree.backend.domain.Department;
 import doktoree.backend.domain.StudentOrganization;
@@ -17,6 +19,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ReservationDto {
 	
 	private String reservationPurpose;
