@@ -36,4 +36,22 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
 		
 	}
+	
+	@ExceptionHandler(EmptyEntityListException.class)
+	public ResponseEntity<ErrorResponse> handleEmptyEntityListException(EmptyEntityListException ex){
+		
+		ErrorResponse errorResponse = new ErrorResponse("List of entities is empty!", ex.getMessage());
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+		
+	}
+	
+	@ExceptionHandler(InvalidForeignKeyException.class)
+	public ResponseEntity<ErrorResponse> handleInvalidForeignKeyException(InvalidForeignKeyException ex){
+		
+		ErrorResponse errorResponse = new ErrorResponse("Foreign key is not valid!", ex.getMessage());
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+		
+	}
 }

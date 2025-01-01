@@ -73,6 +73,7 @@ public class ReservationFactory {
 		reservation.setStartTime(dto.getStartTime());
 		reservation.setClassroom(dto.getClassroom());
 		reservation.setUser(dto.getUser());
+		reservation.setId(dto.getId());
 		
 		return reservation;
 	}

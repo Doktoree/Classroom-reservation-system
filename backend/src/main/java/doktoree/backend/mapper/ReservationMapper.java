@@ -23,6 +23,7 @@ public class ReservationMapper {
 		dto.setDate(reservation.getDate());
 		dto.setClassroom(reservation.getClassroom());
 		dto.setUser(reservation.getUser());
+		dto.setId(reservation.getId());
 		
 		if(reservation instanceof ColloquiumReservation) {
 			dto.setSubjectName(((ColloquiumReservation)reservation).getSubjectName());

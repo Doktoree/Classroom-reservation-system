@@ -3,7 +3,6 @@ package doktoree.backend.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +14,12 @@ import doktoree.backend.error_response.Response;
 import doktoree.backend.exceptions.EmptyEntityListException;
 import doktoree.backend.exceptions.EntityNotExistingException;
 import doktoree.backend.exceptions.EntityNotSavedException;
+import doktoree.backend.exceptions.InvalidForeignKeyException;
 import doktoree.backend.factory.ReservationFactory;
 import doktoree.backend.mapper.ReservationMapper;
+import doktoree.backend.repositories.ClassroomRepository;
 import doktoree.backend.repositories.ReservationRepository;
+import doktoree.backend.repositories.UserRepository;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -25,6 +27,12 @@ public class ReservationServiceImpl implements ReservationService {
 	@Autowired
 	private ReservationRepository reservationRepository;
 
+	@Autowired
+	private ClassroomRepository classroomRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
+	
 	@Override
 	public Response<ReservationDto> findReservationById(Long id) throws EntityNotExistingException {
 		
@@ -47,6 +55,10 @@ public class ReservationServiceImpl implements ReservationService {
 		
 		Reservation reservation = ReservationFactory.createReservation(dto);
 		Response<ReservationDto> response = new Response<>();
+		
+		//napraviti posebnu klasu za proveru kljuceva
+		classroomRepository.findById(dto.getClassroom().getId()).orElseThrow(() -> new InvalidForeignKeyException("There is no classroom with given ID!"));
+		userRepository.findById(dto.getUser().getId()).orElseThrow(()-> new InvalidForeignKeyException("There is no user with given ID!"));
 		
 		try {
 			Reservation savedReservation = reservationRepository.save(reservation);
@@ -87,8 +99,29 @@ public class ReservationServiceImpl implements ReservationService {
 
 	@Override
 	public Response<ReservationDto> updateReservation(ReservationDto dto) throws EntityNotExistingException, EntityNotSavedException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Optional<Reservation> optionalReservation = reservationRepository.findById(dto.getId());
+		
+		if(optionalReservation.isEmpty())
+			throw new EntityNotExistingException("There is not reservation with given ID!");
+		
+		classroomRepository.findById(dto.getClassroom().getId()).orElseThrow(() -> new InvalidForeignKeyException("There is no classroom with given ID!"));
+		userRepository.findById(dto.getUser().getId()).orElseThrow(()-> new InvalidForeignKeyException("There is no user with given ID!"));
+		
+		try {
+			Reservation reservation = ReservationFactory.createReservation(dto);
+			Reservation updatedReservation = reservationRepository.save(reservation);
+			ReservationDto updatedReseravtionDto = ReservationMapper.mapToReservationDto(updatedReservation);
+			
+			Response<ReservationDto> response = new Response<>();
+			response.setDto(updatedReseravtionDto);
+			response.setMessage("Reservation is successfully updated!");
+			return response;
+		} catch (Exception e) {
+			throw new EntityNotSavedException("Reservation can not be updated! "  + e.getMessage());
+		}
+		
+		
 	}
 	
 	

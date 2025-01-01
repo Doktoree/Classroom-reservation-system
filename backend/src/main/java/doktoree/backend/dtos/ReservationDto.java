@@ -22,6 +22,7 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ReservationDto {
 	
+	private Long id;
 	private String reservationPurpose;
     private LocalDate date;
     private LocalTime startTime;
