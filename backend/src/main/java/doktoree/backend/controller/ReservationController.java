@@ -54,4 +54,12 @@ public class ReservationController {
 		return ResponseEntity.ok(reservationService.updateReservation(dto));
 		
 	}
+	
+	@GetMapping("user/{id}")
+	public ResponseEntity<Response<List<ReservationDto>>> getAllReservationsFromUser(@PathVariable Long id){
+		
+		return ResponseEntity.ok(reservationService.getAllReservationsFromUser(id));
+		
+	}
+	
 }

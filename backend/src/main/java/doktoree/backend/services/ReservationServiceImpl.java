@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import doktoree.backend.domain.Reservation;
+import doktoree.backend.domain.User;
 import doktoree.backend.dtos.ReservationDto;
 import doktoree.backend.error_response.Response;
 import doktoree.backend.exceptions.EmptyEntityListException;
@@ -122,6 +123,23 @@ public class ReservationServiceImpl implements ReservationService {
 		}
 		
 		
+	}
+
+	@Override
+	public Response<List<ReservationDto>> getAllReservationsFromUser(Long userId) {
+		
+		User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotExistingException("There is no user with given ID"));
+		List<Reservation> reservations = reservationRepository.findByUser(user);
+		
+		if(reservations.isEmpty())
+			throw new EmptyEntityListException("List of reservation is empty!");
+		
+		List<ReservationDto> reservationDtos = reservations.stream().map(ReservationMapper::mapToReservationDto).collect(Collectors.toList());
+		Response<List<ReservationDto>> response = new Response<>();
+		response.setDto(reservationDtos);
+		response.setMessage("All reservations are successfully found!");
+		return response;
+
 	}
 	
 	

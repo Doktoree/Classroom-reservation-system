@@ -20,4 +20,5 @@ public interface ReservationService {
 	
 	public Response<ReservationDto> updateReservation(ReservationDto dto) throws EntityNotExistingException, EntityNotSavedException;
 	
+	public Response<List<ReservationDto>> getAllReservationsFromUser(Long userId);
 }
