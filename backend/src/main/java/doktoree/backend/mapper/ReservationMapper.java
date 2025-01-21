@@ -21,7 +21,7 @@ public class ReservationMapper {
 		dto.setStartTime(reservation.getStartTime());
 		dto.setEndTime(reservation.getEndTime());
 		dto.setDate(reservation.getDate());
-		dto.setClassroom(reservation.getClassroom());
+		dto.setClassrooms(reservation.getClassrooms());
 		dto.setUser(reservation.getUser());
 		dto.setId(reservation.getId());
 		

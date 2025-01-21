@@ -3,14 +3,19 @@ package doktoree.backend.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import doktoree.backend.domain.Classroom;
 import doktoree.backend.domain.Reservation;
+import doktoree.backend.domain.ReservationStatus;
 import doktoree.backend.domain.User;
 import doktoree.backend.dtos.ReservationDto;
+import doktoree.backend.dtos.ReservationStatusDto;
+import doktoree.backend.enums.Status;
 import doktoree.backend.error_response.Response;
 import doktoree.backend.exceptions.EmptyEntityListException;
 import doktoree.backend.exceptions.EntityNotExistingException;
@@ -18,6 +23,7 @@ import doktoree.backend.exceptions.EntityNotSavedException;
 import doktoree.backend.exceptions.InvalidForeignKeyException;
 import doktoree.backend.factory.ReservationFactory;
 import doktoree.backend.mapper.ReservationMapper;
+import doktoree.backend.mapper.ReservationStatusMapper;
 import doktoree.backend.repositories.ClassroomRepository;
 import doktoree.backend.repositories.ReservationRepository;
 import doktoree.backend.repositories.UserRepository;
@@ -33,6 +39,9 @@ public class ReservationServiceImpl implements ReservationService {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private ReservationStatusServiceImpl reservationStatusService;
 	
 	@Override
 	public Response<ReservationDto> findReservationById(Long id) throws EntityNotExistingException {
@@ -58,12 +67,18 @@ public class ReservationServiceImpl implements ReservationService {
 		Response<ReservationDto> response = new Response<>();
 		
 		//napraviti posebnu klasu za proveru kljuceva
-		classroomRepository.findById(dto.getClassroom().getId()).orElseThrow(() -> new InvalidForeignKeyException("There is no classroom with given ID!"));
+		Set<Classroom> classrooms = dto.getClassrooms();
+		for(Classroom c: classrooms) {		
+			classroomRepository.findById(c.getId()).orElseThrow(()-> new InvalidForeignKeyException("There is no classroom with given ID!"));			
+		}
 		userRepository.findById(dto.getUser().getId()).orElseThrow(()-> new InvalidForeignKeyException("There is no user with given ID!"));
 		
 		try {
 			Reservation savedReservation = reservationRepository.save(reservation);
 			ReservationDto savedReservationDto = ReservationMapper.mapToReservationDto(savedReservation);
+			ReservationStatus reservationStatus = new ReservationStatus(null, savedReservation, Status.PENDING, null);
+			ReservationStatusDto reservationStatusDto = ReservationStatusMapper.mapToReservationStatusDto(reservationStatus);
+			reservationStatusService.saveReservationStatus(reservationStatusDto);
 			response.setDto(savedReservationDto);
 			response.setMessage("Reservation successfully saved!");
 			return response;
@@ -75,7 +90,7 @@ public class ReservationServiceImpl implements ReservationService {
 
 	@Override
 	public Response<ReservationDto> deleteReservation(Long id) throws EntityNotExistingException, EntityNotExistingException {
-		// TODO Auto-generated method stub
+		// Razmisliti
 		return null;
 	}
 
@@ -106,7 +121,10 @@ public class ReservationServiceImpl implements ReservationService {
 		if(optionalReservation.isEmpty())
 			throw new EntityNotExistingException("There is not reservation with given ID!");
 		
-		classroomRepository.findById(dto.getClassroom().getId()).orElseThrow(() -> new InvalidForeignKeyException("There is no classroom with given ID!"));
+		Set<Classroom> classrooms = dto.getClassrooms();
+		for(Classroom c: classrooms) {		
+			classroomRepository.findById(c.getId()).orElseThrow(()-> new InvalidForeignKeyException("There is no classroom with given ID!"));			
+		}
 		userRepository.findById(dto.getUser().getId()).orElseThrow(()-> new InvalidForeignKeyException("There is no user with given ID!"));
 		
 		try {

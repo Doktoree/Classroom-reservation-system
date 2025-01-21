@@ -2,7 +2,7 @@ package doktoree.backend.dtos;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -44,8 +44,8 @@ public class ReservationDto {
 	@NotNull(message = "User can not be null!")
     private User user;
 	
-	@NotNull(message = "Classroom can not be null!")
-    private Classroom classroom;
+	@NotNull(message = "Classrooms can not be null!")
+    private Set<Classroom> classrooms;
 	
     private String subjectName;
     private CouncilType conucilType;

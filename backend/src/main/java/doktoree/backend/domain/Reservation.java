@@ -2,6 +2,8 @@ package doktoree.backend.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.Set;
 
 import org.hibernate.annotations.Formula;
 
@@ -15,6 +17,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -49,9 +53,14 @@ public class Reservation {
 	private User user;
 	
 	
-	@ManyToOne
-	@JoinColumn(name = "classroom_id", nullable = false)
-	private Classroom classroom;
+	@ManyToMany
+	@JoinTable(
+			
+			name = "reservation_classroom",
+			joinColumns = @JoinColumn(name = "reservation_id"),
+			inverseJoinColumns = @JoinColumn(name = "classroom_id")			
+	)
+	private Set<Classroom> classrooms;
 	
 	@Formula("reservation_purpose")
 	private String purpose;

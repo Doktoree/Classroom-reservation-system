@@ -71,7 +71,7 @@ public class ReservationFactory {
 		reservation.setPurpose(dto.getReservationPurpose());
 		reservation.setEndTime(dto.getEndTime());
 		reservation.setStartTime(dto.getStartTime());
-		reservation.setClassroom(dto.getClassroom());
+		reservation.setClassrooms(dto.getClassrooms());
 		reservation.setUser(dto.getUser());
 		reservation.setId(dto.getId());
 		
