@@ -15,9 +15,13 @@ import doktoree.backend.repositories.EmployeeRepository;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-	@Autowired
-	private EmployeeRepository employeeRepository;
+	private final EmployeeRepository employeeRepository;
 	
+	@Autowired
+	public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
+		this.employeeRepository = employeeRepository;
+	}
+
 	public Response<EmployeeDto> getEmployeeById(Long id) throws EntityNotExistingException {
 		
 		Optional<Employee> optionalEmployee = employeeRepository.findById(id);

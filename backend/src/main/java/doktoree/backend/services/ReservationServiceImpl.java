@@ -31,18 +31,23 @@ import doktoree.backend.repositories.UserRepository;
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
-	@Autowired
-	private ReservationRepository reservationRepository;
+	private final ReservationRepository reservationRepository;
 
-	@Autowired
-	private ClassroomRepository classroomRepository;
+	private final ClassroomRepository classroomRepository;
+	
+	private final UserRepository userRepository;
+	
+	private final ReservationStatusServiceImpl reservationStatusService;
 	
 	@Autowired
-	private UserRepository userRepository;
-	
-	@Autowired
-	private ReservationStatusServiceImpl reservationStatusService;
-	
+	public ReservationServiceImpl(ReservationRepository reservationRepository, ClassroomRepository classroomRepository,
+			UserRepository userRepository, ReservationStatusServiceImpl reservationStatusService) {
+		this.reservationRepository = reservationRepository;
+		this.classroomRepository = classroomRepository;
+		this.userRepository = userRepository;
+		this.reservationStatusService = reservationStatusService;
+	}
+
 	@Override
 	public Response<ReservationDto> findReservationById(Long id) throws EntityNotExistingException {
 		

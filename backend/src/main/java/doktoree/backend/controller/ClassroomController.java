@@ -22,10 +22,13 @@ import doktoree.backend.services.ClassroomServiceImpl;
 @RequestMapping("/api/classroom")
 public class ClassroomController {
 
+	private final ClassroomServiceImpl classroomService;
+	
 	@Autowired
-	private ClassroomServiceImpl classroomService;
-	
-	
+	public ClassroomController(ClassroomServiceImpl classroomService) {
+		this.classroomService = classroomService;
+	}
+
 	@GetMapping("{id}")
 	public ResponseEntity<Response<ClassroomDto>> findClassroomById(@PathVariable Long id){
 		

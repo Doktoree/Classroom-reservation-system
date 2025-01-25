@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -20,11 +21,17 @@ import doktoree.backend.services.UserServiceImpl;
 
 @RestController
 @RequestMapping("/api/user")
+@CrossOrigin("http://localhost:5173/")
 public class UserController {
 
-	@Autowired
-	private UserServiceImpl userService;
+	private final UserServiceImpl userService;
 	
+	@Autowired
+	public UserController(UserServiceImpl userService) {
+		super();
+		this.userService = userService;
+	}
+
 	@GetMapping("{id}")
 	public ResponseEntity<Response<UserDto>> findUserById(@PathVariable Long id){
 		

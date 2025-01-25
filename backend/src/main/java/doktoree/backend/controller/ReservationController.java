@@ -21,10 +21,13 @@ import doktoree.backend.services.ReservationServiceImpl;
 @RequestMapping("/api/reservation")
 public class ReservationController {
 
+	private final ReservationServiceImpl reservationService;
 	
 	@Autowired
-	private ReservationServiceImpl reservationService;
-	
+	public ReservationController(ReservationServiceImpl reservationService) {
+		this.reservationService = reservationService;
+	}
+
 	@GetMapping("{id}")
 	public ResponseEntity<Response<ReservationDto>> getReservation(@PathVariable Long id){
 		

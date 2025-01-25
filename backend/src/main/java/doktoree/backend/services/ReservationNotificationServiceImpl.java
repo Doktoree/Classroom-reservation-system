@@ -28,19 +28,25 @@ import doktoree.backend.repositories.UserRepository;
 public class ReservationNotificationServiceImpl implements ReservationNotificationService{
 
 	
-	@Autowired
-	private ReservationNotificationRepository reservationNotificationRepository;
+	private final ReservationNotificationRepository reservationNotificationRepository;
+	
+	private final ReservationRepository reservationRepository;
+	
+	private final UserRepository userRepository;
+	
+	private final ReservationStatusRepository reservationStatusRepository;
 	
 	@Autowired
-	private ReservationRepository reservationRepository;
-	
-	@Autowired
-	private UserRepository userRepository;
-	
-	@Autowired
-	private ReservationStatusRepository reservationStatusRepository;
-	
-	@Override
+	public ReservationNotificationServiceImpl(ReservationNotificationRepository reservationNotificationRepository,
+			ReservationRepository reservationRepository, UserRepository userRepository,
+			ReservationStatusRepository reservationStatusRepository) {
+		super();
+		this.reservationNotificationRepository = reservationNotificationRepository;
+		this.reservationRepository = reservationRepository;
+		this.userRepository = userRepository;
+		this.reservationStatusRepository = reservationStatusRepository;
+	}
+
 	public String saveReservationNotification(ReservationNotificationDto dto) throws EntityNotSavedException {
 
 		Reservation reservation = reservationRepository.findById(dto.getReservation().getId()).orElseThrow(() -> new EntityNotExistingException("There is not reservation with given ID!"));

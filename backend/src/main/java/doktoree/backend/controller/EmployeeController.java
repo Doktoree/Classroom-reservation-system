@@ -15,9 +15,14 @@ import doktoree.backend.services.EmployeeServiceImpl;
 @RequestMapping("/api/employee")
 public class EmployeeController {
 
-	@Autowired
-	private EmployeeServiceImpl employeeService;
+	private final EmployeeServiceImpl employeeService;
 	
+	@Autowired
+	public EmployeeController(EmployeeServiceImpl employeeService) {
+		this.employeeService = employeeService;
+	}
+
+
 	@GetMapping("{id}")
 	public ResponseEntity<Response<EmployeeDto>> findEmployeeById(@PathVariable Long id){
 		

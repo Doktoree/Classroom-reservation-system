@@ -22,9 +22,14 @@ import doktoree.backend.services.ReservationStatusServiceImpl;
 public class ReservationStatusController {
 
 	
-	@Autowired
-	private ReservationStatusServiceImpl reservationStatusService;
+	private final ReservationStatusServiceImpl reservationStatusService;
 	
+	@Autowired
+	public ReservationStatusController(ReservationStatusServiceImpl reservationStatusService) {
+		super();
+		this.reservationStatusService = reservationStatusService;
+	}
+
 	@GetMapping("{id}")
 	public ResponseEntity<Response<ReservationStatusDto>> getReservationStatus(@PathVariable Long id){
 		

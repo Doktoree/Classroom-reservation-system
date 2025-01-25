@@ -19,9 +19,14 @@ import doktoree.backend.repositories.ClassroomRepository;
 @Service
 public class ClassroomServiceImpl implements ClassroomService {
 
-	@Autowired
-	private ClassroomRepository classroomRepository;
+	private final ClassroomRepository classroomRepository;
 	
+	
+	@Autowired
+	public ClassroomServiceImpl(ClassroomRepository classroomRepository) {
+		this.classroomRepository = classroomRepository;
+	}
+
 	@Override
 	public Response<ClassroomDto> findClassroomById(Long id) throws EntityNotExistingException {
 		

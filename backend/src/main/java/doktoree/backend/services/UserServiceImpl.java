@@ -14,14 +14,23 @@ import doktoree.backend.error_response.Response;
 import doktoree.backend.exceptions.EntityNotDeletedException;
 import doktoree.backend.exceptions.EntityNotExistingException;
 import doktoree.backend.exceptions.EntityNotSavedException;
+import doktoree.backend.exceptions.InvalidForeignKeyException;
 import doktoree.backend.mapper.UserMapper;
+import doktoree.backend.repositories.EmployeeRepository;
 import doktoree.backend.repositories.UserRepository;
 
 @Service
 public class UserServiceImpl implements UserService{
 
+	private final UserRepository userRepository;
+
+	private final EmployeeRepository employeeRepository;
+	
 	@Autowired
-	private UserRepository userRepository;
+	public UserServiceImpl(UserRepository userRepository, EmployeeRepository employeeRepository) {
+		this.userRepository = userRepository;
+		this.employeeRepository = employeeRepository;
+	}
 
 	@Override
 	public Response<UserDto> findUserById(Long id) throws EntityNotExistingException {
@@ -46,6 +55,8 @@ public class UserServiceImpl implements UserService{
 	public Response<UserDto> saveUser(UserDto dto) throws EntityNotSavedException {
 		User user = UserMapper.mapToUser(dto);
 		Response<UserDto> response = new Response<>();
+		employeeRepository.findById(dto.employeeId()).orElseThrow(() -> new InvalidForeignKeyException("There is no employee with given ID!"));
+		
 		
 		try {
 			User savedUser = userRepository.save(user);
