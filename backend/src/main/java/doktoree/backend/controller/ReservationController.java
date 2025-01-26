@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import doktoree.backend.dtos.ReservationDto;
@@ -45,9 +46,9 @@ public class ReservationController {
 	
 	
 	@GetMapping
-	public ResponseEntity<Response<List<ReservationDto>>> getAllReservations(){
+	public ResponseEntity<Response<List<ReservationDto>>> getAllReservations(@RequestParam(defaultValue = "0") int pageNumber){
 		
-		return ResponseEntity.ok(reservationService.getAllReservations());
+		return ResponseEntity.ok(reservationService.getAllReservations(pageNumber));
 		
 	}
 	
@@ -59,9 +60,9 @@ public class ReservationController {
 	}
 	
 	@GetMapping("user/{id}")
-	public ResponseEntity<Response<List<ReservationDto>>> getAllReservationsFromUser(@PathVariable Long id){
+	public ResponseEntity<Response<List<ReservationDto>>> getAllReservationsFromUser(@PathVariable Long id, @RequestParam(defaultValue = "0") int pageNumber){
 		
-		return ResponseEntity.ok(reservationService.getAllReservationsFromUser(id));
+		return ResponseEntity.ok(reservationService.getAllReservationsFromUser(id,pageNumber));
 		
 	}
 	

@@ -5,12 +5,15 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import doktoree.backend.domain.Employee;
 import doktoree.backend.domain.User;
 import doktoree.backend.dtos.UserDto;
 import doktoree.backend.error_response.Response;
+import doktoree.backend.exceptions.EmptyEntityListException;
 import doktoree.backend.exceptions.EntityNotDeletedException;
 import doktoree.backend.exceptions.EntityNotExistingException;
 import doktoree.backend.exceptions.EntityNotSavedException;
@@ -90,9 +93,13 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public Response<List<UserDto>> getAllUsers() {
+	public Response<List<UserDto>> getAllUsers(int pageNumber) throws EmptyEntityListException {
 
-		List<User> users = userRepository.findAll();
+		Page<User> usersPage = userRepository.findAll(PageRequest.of(pageNumber, 10));
+		List<User> users = usersPage.getContent();
+		
+		if(users.isEmpty())
+			throw new EmptyEntityListException("There are no users!");
 		
 		List<UserDto> userDtos =  users.stream().map(UserMapper::mapToUserDto).collect(Collectors.toList());
 		Response<List<UserDto>> response = new Response<>();

@@ -7,6 +7,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import doktoree.backend.domain.Classroom;
@@ -27,6 +29,7 @@ import doktoree.backend.mapper.ReservationStatusMapper;
 import doktoree.backend.repositories.ClassroomRepository;
 import doktoree.backend.repositories.ReservationRepository;
 import doktoree.backend.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -65,6 +68,7 @@ public class ReservationServiceImpl implements ReservationService {
 		return response;
 	}
 
+	@Transactional
 	@Override
 	public Response<ReservationDto> saveReservation(ReservationDto dto) throws EntityNotExistingException {
 		
@@ -100,10 +104,11 @@ public class ReservationServiceImpl implements ReservationService {
 	}
 
 	@Override
-	public Response<List<ReservationDto>> getAllReservations() {
+	public Response<List<ReservationDto>> getAllReservations(int pageNumber) throws EmptyEntityListException {
 		
 		List<ReservationDto> reservationDtos = new ArrayList<>();
-		List<Reservation> reservations = reservationRepository.findAll();
+		Page<Reservation> reservationsPage = reservationRepository.findAll(PageRequest.of(pageNumber, 10));
+		List<Reservation> reservations = reservationsPage.getContent();
 		Response<List<ReservationDto>> response = new Response<>();
 		
 		if(reservations.isEmpty())
@@ -149,10 +154,12 @@ public class ReservationServiceImpl implements ReservationService {
 	}
 
 	@Override
-	public Response<List<ReservationDto>> getAllReservationsFromUser(Long userId) {
+	public Response<List<ReservationDto>> getAllReservationsFromUser(Long userId, int pageNumber) throws EmptyEntityListException {
 		
 		User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotExistingException("There is no user with given ID"));
-		List<Reservation> reservations = reservationRepository.findByUser(user);
+		Page<Reservation> reservationsPage = reservationRepository.findByUser(user, PageRequest.of(pageNumber, 10));
+		
+		List<Reservation> reservations = reservationsPage.getContent();
 		
 		if(reservations.isEmpty())
 			throw new EmptyEntityListException("List of reservation is empty!");

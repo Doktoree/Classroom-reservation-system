@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import doktoree.backend.dtos.UserDto;
@@ -55,9 +56,9 @@ public class UserController {
 	}
 	
 	@GetMapping("/all")
-	public ResponseEntity<Response<List<UserDto>>> getAllUsers(){
+	public ResponseEntity<Response<List<UserDto>>> getAllUsers(@RequestParam(defaultValue = "0") int pageNumber){
 		
-		return ResponseEntity.ok(userService.getAllUsers());
+		return ResponseEntity.ok(userService.getAllUsers(pageNumber));
 		
 	}
 	
