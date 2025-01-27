@@ -55,6 +55,7 @@ public class ReservationMapper {
 		}
 		else if(reservation instanceof OtherWorkshopReservation) {
 			dto.setName(((OtherWorkshopReservation) reservation).getName());
+			dto.setWorkshopParticipants(((OtherWorkshopReservation) reservation).getParticipants());
 			dto.setReservationPurpose("OTHER_WORKSHOP");
 		}
 		

@@ -1,5 +1,7 @@
 package doktoree.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,7 +24,7 @@ import lombok.Setter;
 public class WorkshopParticipant {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	@Column(nullable = false)
@@ -33,5 +35,6 @@ public class WorkshopParticipant {
 	
 	@ManyToOne
 	@JoinColumn(name = "reservation_id")
+	@JsonIgnore
 	private OtherWorkshopReservation otherWorkshopReservation;
 }

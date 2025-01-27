@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import doktoree.backend.domain.Classroom;
 import doktoree.backend.domain.Reservation;
+import doktoree.backend.domain.ReservationNotification;
 import doktoree.backend.domain.ReservationStatus;
 import doktoree.backend.domain.User;
 import doktoree.backend.dtos.ReservationDto;
@@ -27,6 +28,7 @@ import doktoree.backend.factory.ReservationFactory;
 import doktoree.backend.mapper.ReservationMapper;
 import doktoree.backend.mapper.ReservationStatusMapper;
 import doktoree.backend.repositories.ClassroomRepository;
+import doktoree.backend.repositories.ReservationNotificationRepository;
 import doktoree.backend.repositories.ReservationRepository;
 import doktoree.backend.repositories.UserRepository;
 import jakarta.transaction.Transactional;
@@ -42,13 +44,18 @@ public class ReservationServiceImpl implements ReservationService {
 	
 	private final ReservationStatusServiceImpl reservationStatusService;
 	
+	private final ReservationNotificationRepository notificationRepository;
+	
+	
 	@Autowired
 	public ReservationServiceImpl(ReservationRepository reservationRepository, ClassroomRepository classroomRepository,
-			UserRepository userRepository, ReservationStatusServiceImpl reservationStatusService) {
+			UserRepository userRepository, ReservationStatusServiceImpl reservationStatusService,
+			ReservationNotificationRepository notificationRepository) {
 		this.reservationRepository = reservationRepository;
 		this.classroomRepository = classroomRepository;
 		this.userRepository = userRepository;
 		this.reservationStatusService = reservationStatusService;
+		this.notificationRepository = notificationRepository;
 	}
 
 	@Override
@@ -75,7 +82,6 @@ public class ReservationServiceImpl implements ReservationService {
 		Reservation reservation = ReservationFactory.createReservation(dto);
 		Response<ReservationDto> response = new Response<>();
 		
-		//napraviti posebnu klasu za proveru kljuceva
 		Set<Classroom> classrooms = dto.getClassrooms();
 		for(Classroom c: classrooms) {		
 			classroomRepository.findById(c.getId()).orElseThrow(()-> new InvalidForeignKeyException("There is no classroom with given ID!"));			
@@ -119,11 +125,11 @@ public class ReservationServiceImpl implements ReservationService {
 		response.setMessage("All reservations successfully found!");
 		
 		return response;
-		
-		
+				
 	}
 
 	@Override
+	@Transactional
 	public Response<ReservationDto> updateReservation(ReservationDto dto) throws EntityNotExistingException, EntityNotSavedException {
 		
 		Optional<Reservation> optionalReservation = reservationRepository.findById(dto.getId());
@@ -140,8 +146,9 @@ public class ReservationServiceImpl implements ReservationService {
 		try {
 			Reservation reservation = ReservationFactory.createReservation(dto);
 			Reservation updatedReservation = reservationRepository.save(reservation);
+			ReservationNotification reservationNotification = new ReservationNotification(null, "Some of classrooms have been changed!", updatedReservation, updatedReservation.getUser());
+			notificationRepository.save(reservationNotification);
 			ReservationDto updatedReseravtionDto = ReservationMapper.mapToReservationDto(updatedReservation);
-			
 			Response<ReservationDto> response = new Response<>();
 			response.setDto(updatedReseravtionDto);
 			response.setMessage("Reservation is successfully updated!");

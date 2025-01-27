@@ -11,6 +11,7 @@ import doktoree.backend.domain.OtherMeetingReservation;
 import doktoree.backend.domain.OtherWorkshopReservation;
 import doktoree.backend.domain.Reservation;
 import doktoree.backend.domain.StudentOrganizationReservation;
+import doktoree.backend.domain.WorkshopParticipant;
 import doktoree.backend.dtos.ReservationDto;
 
 @Component
@@ -61,6 +62,16 @@ public class ReservationFactory {
 		case "OTHER_WORKSHOP":
 			reservation = new OtherWorkshopReservation();
 			((OtherWorkshopReservation) reservation).setName(dto.getName());
+			if(!dto.getWorkshopParticipants().isEmpty() && dto.getWorkshopParticipants()!=null) {
+				
+				for(WorkshopParticipant participant: dto.getWorkshopParticipants()) {
+						
+					participant.setOtherWorkshopReservation((OtherWorkshopReservation)reservation);
+					
+				}
+				((OtherWorkshopReservation) reservation).setParticipants(dto.getWorkshopParticipants());
+			}
+			
 			break;
 			
 		default:

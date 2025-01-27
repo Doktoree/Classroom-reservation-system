@@ -2,6 +2,7 @@ package doktoree.backend.dtos;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -10,6 +11,7 @@ import doktoree.backend.domain.Classroom;
 import doktoree.backend.domain.Department;
 import doktoree.backend.domain.StudentOrganization;
 import doktoree.backend.domain.User;
+import doktoree.backend.domain.WorkshopParticipant;
 import doktoree.backend.enums.CouncilType;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
@@ -53,5 +55,6 @@ public class ReservationDto {
     private String name;
     private Department department;
     private StudentOrganization studentOrganization;
+    private List<WorkshopParticipant> workshopParticipants;
 
 }
