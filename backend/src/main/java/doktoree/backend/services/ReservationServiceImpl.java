@@ -45,17 +45,20 @@ public class ReservationServiceImpl implements ReservationService {
 	private final ReservationStatusServiceImpl reservationStatusService;
 	
 	private final ReservationNotificationRepository notificationRepository;
-	
+
+	private final MailService mailService;
 	
 	@Autowired
 	public ReservationServiceImpl(ReservationRepository reservationRepository, ClassroomRepository classroomRepository,
 			UserRepository userRepository, ReservationStatusServiceImpl reservationStatusService,
-			ReservationNotificationRepository notificationRepository) {
+			ReservationNotificationRepository notificationRepository,
+			MailService mailService					  ) {
 		this.reservationRepository = reservationRepository;
 		this.classroomRepository = classroomRepository;
 		this.userRepository = userRepository;
 		this.reservationStatusService = reservationStatusService;
 		this.notificationRepository = notificationRepository;
+		this.mailService = mailService;
 	}
 
 	@Override
@@ -147,7 +150,8 @@ public class ReservationServiceImpl implements ReservationService {
 			Reservation reservation = ReservationFactory.createReservation(dto);
 			Reservation updatedReservation = reservationRepository.save(reservation);
 			ReservationNotification reservationNotification = new ReservationNotification(null, "Some of classrooms have been changed!", updatedReservation, updatedReservation.getUser());
-			notificationRepository.save(reservationNotification);
+			ReservationNotification savedReservationNotification = notificationRepository.save(reservationNotification);
+			mailService.sendEmailChangeClassrooms(savedReservationNotification);
 			ReservationDto updatedReseravtionDto = ReservationMapper.mapToReservationDto(updatedReservation);
 			Response<ReservationDto> response = new Response<>();
 			response.setDto(updatedReseravtionDto);
