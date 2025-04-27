@@ -2,6 +2,8 @@ package doktoree.backend.controller;
 
 import java.util.List;
 
+import doktoree.backend.domain.Reservation;
+import doktoree.backend.dtos.ClassroomDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +21,7 @@ import doktoree.backend.error_response.Response;
 import doktoree.backend.services.ReservationServiceImpl;
 
 @RestController
-@RequestMapping("/api/reservation")
+@RequestMapping("/api/reservation/")
 public class ReservationController {
 
 	private final ReservationServiceImpl reservationService;
@@ -64,6 +66,13 @@ public class ReservationController {
 		
 		return ResponseEntity.ok(reservationService.getAllReservationsFromUser(id,pageNumber));
 		
+	}
+
+	@PostMapping("availableClassrooms")
+	public ResponseEntity<Response<List<ClassroomDto>>> getAllAvailableClassrooms(@RequestBody ReservationDto dto){
+
+		return ResponseEntity.ok(reservationService.getAllAvailableClassrooms(dto));
+
 	}
 	
 }

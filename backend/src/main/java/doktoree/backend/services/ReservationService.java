@@ -2,6 +2,7 @@ package doktoree.backend.services;
 
 import java.util.List;
 
+import doktoree.backend.dtos.ClassroomDto;
 import doktoree.backend.dtos.ReservationDto;
 import doktoree.backend.error_response.Response;
 import doktoree.backend.exceptions.EmptyEntityListException;
@@ -22,4 +23,6 @@ public interface ReservationService {
 	public Response<ReservationDto> updateReservation(ReservationDto dto) throws EntityNotExistingException, EntityNotSavedException;
 	
 	public Response<List<ReservationDto>> getAllReservationsFromUser(Long userId, int pageNumber) throws EmptyEntityListException;
+
+	public Response<List<ClassroomDto>> getAllAvailableClassrooms(ReservationDto dto) throws EmptyEntityListException;
 }

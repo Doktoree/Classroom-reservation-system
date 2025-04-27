@@ -2,6 +2,10 @@ package doktoree.backend.repositories;
 
 
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -20,5 +24,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>{
 	public Page<Reservation> findAll(Pageable pageable);
 	
 	public List<Reservation> findByUser(User user);
+
+	public List<Reservation> findByDateAndStartTimeGreaterThanAndEndTimeLessThan(LocalDate date, LocalTime startTime, LocalTime endTime);
 	
 }

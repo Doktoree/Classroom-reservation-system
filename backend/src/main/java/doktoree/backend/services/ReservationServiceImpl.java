@@ -1,11 +1,10 @@
 package doktoree.backend.services;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import doktoree.backend.dtos.ClassroomDto;
+import doktoree.backend.mapper.ClassroomMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -182,6 +181,46 @@ public class ReservationServiceImpl implements ReservationService {
 		return response;
 
 	}
-	
-	
+
+	@Override
+	public Response<List<ClassroomDto>> getAllAvailableClassrooms(ReservationDto dto) throws EmptyEntityListException{
+
+			List<Reservation> reservations = reservationRepository
+					.findByDateAndStartTimeGreaterThanAndEndTimeLessThan(
+							dto.getDate(), dto.getStartTime(), dto.getEndTime());
+
+			Set<Classroom> classrooms = new HashSet<>();
+
+			for(Reservation r: reservations){
+
+				for(Classroom c: r.getClassrooms()){
+
+					Optional<Classroom> optionalClassroom = classroomRepository.findById(c.getId());
+					classrooms.add(optionalClassroom.get());
+
+				}
+
+			}
+
+		System.out.println("Classroom not available size: " + classrooms.size());
+
+			List<Classroom> allClassrooms = classroomRepository.findAll();
+			allClassrooms.removeAll(classrooms);
+
+			if(allClassrooms.isEmpty()){
+
+				throw new EmptyEntityListException("There are no available classrooms!");
+
+			}
+
+
+
+		List<ClassroomDto> classroomDtos = allClassrooms.stream().map(ClassroomMapper::mapToClassroomDto).toList();
+		Response<List<ClassroomDto>> response = new Response<>();
+		response.setDto(classroomDtos);
+		response.setMessage("All available classrooms are successfully found!");
+		return response;
+	}
+
+
 }
