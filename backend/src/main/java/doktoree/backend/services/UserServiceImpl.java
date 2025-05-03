@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService{
 	public Response<UserDto> saveUser(UserDto dto) throws EntityNotSavedException {
 		User user = UserMapper.mapToUser(dto);
 		Response<UserDto> response = new Response<>();
-		employeeRepository.findById(dto.employeeId()).orElseThrow(() -> new InvalidForeignKeyException("There is no employee with given ID!"));
+		employeeRepository.findById(dto.getEmployeeId()).orElseThrow(() -> new InvalidForeignKeyException("There is no employee with given ID!"));
 		
 		
 		try {
@@ -111,14 +111,14 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public Response<UserDto> updateUser(UserDto dto) throws EntityNotExistingException, EntityNotSavedException {
 
-		User user = userRepository.findById(dto.id()).orElseThrow(()-> new EntityNotExistingException("There is not user with given ID!"));
+		User user = userRepository.findById(dto.getId()).orElseThrow(()-> new EntityNotExistingException("There is not user with given ID!"));
 		
 		try {
 			Employee employee = new Employee();
-			employee.setId(dto.employeeId());
-			user.setEmail(dto.email());
-			user.setPassword(dto.password());
-			user.setRole(dto.role());
+			employee.setId(dto.getEmployeeId());
+			user.setEmail(dto.getEmail());
+			user.setPassword(dto.getPassword());
+			user.setRole(dto.getRole());
 			user.setEmployee(employee);
 			userRepository.save(user);
 			UserDto userDto = UserMapper.mapToUserDto(user);

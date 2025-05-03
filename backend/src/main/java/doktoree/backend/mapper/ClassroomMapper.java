@@ -8,11 +8,11 @@ public class ClassroomMapper {
 	public static Classroom mapToClassroom(ClassroomDto dto) {
 		
 		
-		return new Classroom(dto.id(),
-				dto.classroomNumber(),
-				dto.classRoomType(),
-				dto.capacity(),
-				dto.numberOfComputers());
+		return new Classroom(dto.getId(),
+				dto.getClassRoomNumber(),
+				dto.getClassRoomType(),
+				dto.getCapacity(),
+				dto.getNumberOfComputers());
 		
 	}
 	

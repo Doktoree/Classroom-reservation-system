@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import doktoree.backend.exceptions.EmptyEntityListException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -91,7 +92,10 @@ public class ClassroomServiceImpl implements ClassroomService {
 	public Response<List<ClassroomDto>> getAllClassrooms() {
 		
 		List<Classroom> classrooms = classroomRepository.findAll();
-		
+
+		if(classrooms.isEmpty())
+			throw new EmptyEntityListException("There are no classrooms!");
+
 		List<ClassroomDto> classroomDtos =  classrooms.stream().map(ClassroomMapper::mapToClassroomDto).collect(Collectors.toList());
 		Response<List<ClassroomDto>> response = new Response<>();
 		response.setDto(classroomDtos);
@@ -102,13 +106,13 @@ public class ClassroomServiceImpl implements ClassroomService {
 	@Override
 	public Response<ClassroomDto> updateClassroom(ClassroomDto dto) throws EntityNotExistingException, EntityNotSavedException {
 			
-		Classroom classroom = classroomRepository.findById(dto.id()).orElseThrow(()-> new EntityNotExistingException("There is not classroom with given ID!"));
+		Classroom classroom = classroomRepository.findById(dto.getId()).orElseThrow(()-> new EntityNotExistingException("There is not classroom with given ID!"));
 		
 		try {
-			classroom.setClassRoomNumber(dto.classroomNumber());
-			classroom.setClassRoomType(dto.classRoomType());
-			classroom.setCapacity(dto.capacity());
-			classroom.setNumberOfComputers(dto.numberOfComputers());
+			classroom.setClassRoomNumber(dto.getClassRoomNumber());
+			classroom.setClassRoomType(dto.getClassRoomType());
+			classroom.setCapacity(dto.getCapacity());
+			classroom.setNumberOfComputers(dto.getNumberOfComputers());
 			classroomRepository.save(classroom);
 			ClassroomDto classroomDto = ClassroomMapper.mapToClassroomDto(classroom);
 			Response<ClassroomDto> response = new Response<>();

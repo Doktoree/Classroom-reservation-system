@@ -9,9 +9,9 @@ public class UserMapper {
 	public static User mapToUser(UserDto dto) {
 		
 		Employee employee = new Employee();
-		employee.setId(dto.employeeId());
+		employee.setId(dto.getEmployeeId());
 		
-		return new User(dto.id(), dto.email(), dto.password(), dto.role(), employee);
+		return new User(dto.getId(), dto.getEmail(), dto.getPassword(), dto.getRole(), employee);
 		
 	}
 	
