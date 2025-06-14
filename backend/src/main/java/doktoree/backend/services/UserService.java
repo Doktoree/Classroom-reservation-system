@@ -2,6 +2,7 @@ package doktoree.backend.services;
 
 import java.util.List;
 
+import doktoree.backend.domain.User;
 import doktoree.backend.dtos.UserDto;
 import doktoree.backend.error_response.Response;
 import doktoree.backend.exceptions.EmptyEntityListException;
@@ -21,5 +22,5 @@ public interface UserService {
 
 	public Response<UserDto> updateUser(UserDto dto) throws EntityNotExistingException, EntityNotSavedException;
 			
-
+	public User validateUser(User user) throws EntityNotSavedException;
 }

@@ -1,5 +1,6 @@
 package doktoree.backend.services;
 
+import java.beans.Encoder;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -7,6 +8,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import doktoree.backend.domain.Employee;
@@ -21,6 +24,8 @@ import doktoree.backend.exceptions.InvalidForeignKeyException;
 import doktoree.backend.mapper.UserMapper;
 import doktoree.backend.repositories.EmployeeRepository;
 import doktoree.backend.repositories.UserRepository;
+
+import javax.swing.text.html.Option;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -59,8 +64,11 @@ public class UserServiceImpl implements UserService{
 		User user = UserMapper.mapToUser(dto);
 		Response<UserDto> response = new Response<>();
 		employeeRepository.findById(dto.getEmployeeId()).orElseThrow(() -> new InvalidForeignKeyException("There is no employee with given ID!"));
-		
-		
+		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+		validateUser(user);
+
 		try {
 			User savedUser = userRepository.save(user);
 			response.setDto(UserMapper.mapToUserDto(savedUser));
@@ -131,7 +139,24 @@ public class UserServiceImpl implements UserService{
 			throw new EntityNotSavedException("User can not be updated!");
 		}
 	}
-	
-	
-	
+
+	@Override
+	public User validateUser(User user) throws EntityNotSavedException {
+
+		Optional<User> searchedUser = userRepository.findUserByEmployeeIdAndRole(user.getEmployee().getId(), user.getRole());
+
+		if(searchedUser.isPresent())
+			throw new EntityNotSavedException("A user with that employee ID and role already exists!");
+
+		Optional<User> emailUser = userRepository.findByEmail(user.getEmail());
+
+		if(emailUser.isPresent())
+			throw new EntityNotSavedException("A user with that email already exists!");
+
+		System.out.println("User: " + searchedUser.get().getRole() + " " + searchedUser.get().getEmail());
+
+		return searchedUser.get();
+	}
+
+
 }

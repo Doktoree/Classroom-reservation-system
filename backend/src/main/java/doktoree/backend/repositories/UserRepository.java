@@ -1,5 +1,6 @@
 package doktoree.backend.repositories;
 
+import doktoree.backend.enums.Role;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,4 +17,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	public Optional<User> findByEmail(String email);
 
+	public Optional<User> findUserByEmployeeIdAndRole(Long employeeId, Role role);
 }
