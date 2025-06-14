@@ -17,7 +17,7 @@ public class JwtUtil {
 
         return Jwts.builder()
                 .setSubject(user.getEmail())
-                .claim("role", user.getRole())
+                .claim("role", "ROLE_" + user.getRole())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 *60))
                 .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()),SignatureAlgorithm.HS256)
@@ -54,7 +54,6 @@ public class JwtUtil {
 
     public boolean validateToken(String token, String username){
 
-        System.out.println(extractUsername(token).equals(username) && !isTokenExpired(token));
         return extractUsername(token).equals(username) && !isTokenExpired(token);
 
     }

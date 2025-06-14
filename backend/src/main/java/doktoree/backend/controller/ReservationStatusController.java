@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,7 +37,8 @@ public class ReservationStatusController {
 		return ResponseEntity.ok(reservationStatusService.findReservationStatusById(id));
 		
 	}
-	
+
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
 	public ResponseEntity<Response<ReservationStatusDto>> saveReservationStatus(@RequestBody ReservationStatusDto dto){
 		
@@ -50,14 +52,16 @@ public class ReservationStatusController {
 		return ResponseEntity.ok(reservationStatusService.getAllReservationStatusFromUser(id));
 		
 	}
-	
+
+	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping("/approve")
 	public ResponseEntity<Response<ReservationStatusDto>> approveReservation(@RequestBody ReservationStatusDto dto){
 		
 		return ResponseEntity.ok(reservationStatusService.approveReservation(dto));
 		
 	}
-	
+
+	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping("/reject")
 	public ResponseEntity<Response<ReservationStatusDto>> rejectReservation(@RequestBody ReservationStatusDto dto){
 		

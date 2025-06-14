@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,28 +41,32 @@ public class UserController {
 		
 		
 	}
-	
+
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
 	public ResponseEntity<Response<UserDto>> saveUser(@RequestBody UserDto dto){
 		
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(userService.saveUser(dto));
 	}
-	
+
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("{id}")
 	public ResponseEntity<Response<UserDto>> deleteUser(@PathVariable Long id){
 		
 		return ResponseEntity.ok(userService.deleteUser(id));
 		
 	}
-	
+
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/all")
 	public ResponseEntity<Response<List<UserDto>>> getAllUsers(@RequestParam(defaultValue = "0") int pageNumber){
 		
 		return ResponseEntity.ok(userService.getAllUsers(pageNumber));
 		
 	}
-	
+
+	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping
 	public ResponseEntity<Response<UserDto>> updateUser(@RequestBody UserDto dto){
 		

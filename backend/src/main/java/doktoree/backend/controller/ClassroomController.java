@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -36,14 +37,16 @@ public class ClassroomController {
 		
 		
 	}
-	
+
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
 	public ResponseEntity<Response<ClassroomDto>> saveClassroom(@RequestBody ClassroomDto dto){
 		
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(classroomService.saveClassroom(dto));
 	}
-	
+
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("{id}")
 	public ResponseEntity<Response<ClassroomDto>> deleteClassroom(@PathVariable Long id){
 		
@@ -57,7 +60,8 @@ public class ClassroomController {
 		return ResponseEntity.ok(classroomService.getAllClassrooms());
 		
 	}
-	
+
+	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping
 	public ResponseEntity<Response<ClassroomDto>> updateClassroom(@RequestBody ClassroomDto dto){
 		

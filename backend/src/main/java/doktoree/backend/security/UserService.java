@@ -36,7 +36,7 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findByEmail(registerDto.getEmail());
 
         if(!optionalUser.isEmpty())
-            return new ResponseEntity<>("Zauzet je email!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Email is already taken!", HttpStatus.BAD_REQUEST);
 
         Employee employee = new Employee();
         employee.setId(registerDto.getEmployeeId());
@@ -48,7 +48,7 @@ public class UserService {
 
         userRepository.save(user);
 
-        return new ResponseEntity<>("Uspesna registracija", HttpStatus.CREATED);
+        return new ResponseEntity<>("Successfully registration!", HttpStatus.CREATED);
 
 
     }
@@ -56,11 +56,11 @@ public class UserService {
     public ResponseEntity<?> login(LoginDto loginDto){
 
         User user = userRepository
-                .findByEmail(loginDto.getEmail()).orElseThrow(() -> new UsernameNotFoundException("Nema korisnika"));
+                .findByEmail(loginDto.getEmail()).orElseThrow(() -> new UsernameNotFoundException("There is no user with given email!"));
 
         if(!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())){
 
-            return new ResponseEntity<>("Pogresna sifra dripce!", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Wrong password!!", HttpStatus.UNAUTHORIZED);
 
 
         }
