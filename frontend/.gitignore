@@ -1,24 +1,42 @@
+# Node modules
+node_modules/
+
+# Build output
+/dist/
+/build/
+/out/
+
+# Electron packaged apps
+/release/
+/app-release/
+/*.asar
+
 # Logs
-logs
-*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# OS generated files
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+Thumbs.db
+
+# Environment files
+.env
+.env.*
+
+# VSCode settings
+.vscode/
+
+# SASS cache
+.sass-cache/
+
+# Coverage reports
+coverage/
+
+# Misc
+*.log
+*.tsbuildinfo
+.idea/
+*.swp
+*.swo
