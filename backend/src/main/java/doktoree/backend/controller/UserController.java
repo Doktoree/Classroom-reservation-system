@@ -23,7 +23,7 @@ import doktoree.backend.services.UserServiceImpl;
 
 @RestController
 @RequestMapping("/api/user")
-@CrossOrigin("http://localhost:5173/")
+@CrossOrigin(origins = "http://localhost:5173")
 public class UserController {
 
 	private final UserServiceImpl userService;
