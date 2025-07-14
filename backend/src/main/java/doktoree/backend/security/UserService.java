@@ -11,6 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -59,15 +61,17 @@ public class UserService {
                 .findByEmail(loginDto.getEmail()).orElseThrow(() -> new UsernameNotFoundException("There is no user with given email!"));
 
         if(!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())){
-
-            return new ResponseEntity<>("Wrong password!!", HttpStatus.UNAUTHORIZED);
+            Map<String, String> wrongPasswordMap = new HashMap<>();
+            wrongPasswordMap.put("message", "Wrong password!");
+            return new ResponseEntity<>(wrongPasswordMap, HttpStatus.UNAUTHORIZED);
 
 
         }
 
         String token = jwtUtil.generateToken(user);
-
-        return new ResponseEntity<>("Token: " + token, HttpStatus.OK);
+        Map<String, String> tokenMap = new HashMap<>();
+        tokenMap.put("token", token);
+        return new ResponseEntity<>(tokenMap, HttpStatus.OK);
 
     }
 
