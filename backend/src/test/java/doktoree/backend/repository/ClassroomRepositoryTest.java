@@ -47,11 +47,6 @@ public class ClassroomRepositoryTest {
     @Test
     public void saveClassroom_ReturnsClassroom(){
 
-        classroom1.setClassRoomNumber("Classroom 1");
-        classroom1.setCapacity(10);
-        classroom1.setClassRoomType(ClassRoomType.COMPUTER_LAB);
-        classroom1.setNumberOfComputers(50);
-
         Classroom savedClassroom = classroomRepository.save(classroom1);
 
         Assertions.assertThat(savedClassroom.getId()).isNotNull();
