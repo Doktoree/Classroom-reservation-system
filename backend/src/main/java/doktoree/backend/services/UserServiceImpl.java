@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService{
 
 		Optional<User> optionalUser = userRepository.findById(id);
 		
-		if(!optionalUser.isPresent())
+		if(optionalUser.isEmpty())
 			throw new EntityNotExistingException("There is not user with given ID!");
 		
 		try {
@@ -153,9 +153,8 @@ public class UserServiceImpl implements UserService{
 		if(emailUser.isPresent())
 			throw new EntityNotSavedException("A user with that email already exists!");
 
-		System.out.println("User: " + searchedUser.get().getRole() + " " + searchedUser.get().getEmail());
 
-		return searchedUser.get();
+		return user;
 	}
 
 

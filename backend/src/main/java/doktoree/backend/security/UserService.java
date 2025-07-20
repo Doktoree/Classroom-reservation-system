@@ -55,7 +55,7 @@ public class UserService {
 
     }
 
-    public ResponseEntity<?> login(LoginDto loginDto){
+    public ResponseEntity<Map<String, String>> login(LoginDto loginDto){
 
         User user = userRepository
                 .findByEmail(loginDto.getEmail()).orElseThrow(() -> new UsernameNotFoundException("There is no user with given email!"));

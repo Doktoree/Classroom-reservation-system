@@ -12,7 +12,7 @@ import doktoree.backend.error_response.Response;
 import doktoree.backend.services.EmployeeServiceImpl;
 
 @RestController
-@RequestMapping("/api/employee")
+@RequestMapping("/api/employee/")
 @CrossOrigin(origins = "http://localhost:5173")
 public class EmployeeController {
 

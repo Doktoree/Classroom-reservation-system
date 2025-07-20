@@ -24,7 +24,7 @@ public class ReservationFactory {
 		
 		switch (dto.getReservationPurpose()) {
 		
-		case "COLLOQUIM":
+		case "COLLOQUIUM":
 			reservation = new ColloquiumReservation();
 			((ColloquiumReservation) reservation).setSubjectName(dto.getSubjectName());
 			break;
@@ -46,7 +46,7 @@ public class ReservationFactory {
 			
 		case "COUNCIL":
 			reservation = new CouncilReservation();
-			((CouncilReservation) reservation).setCouncilType(dto.getConucilType());
+			((CouncilReservation) reservation).setCouncilType(dto.getCouncilType());
 			break;
 			
 		case "OTHER":

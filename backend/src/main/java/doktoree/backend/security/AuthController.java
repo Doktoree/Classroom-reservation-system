@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/auth/")
 @CrossOrigin(origins = "http://localhost:5173")
@@ -27,7 +29,7 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<?> login(@RequestBody LoginDto loginDto){
+    public ResponseEntity<Map<String, String>> login(@RequestBody LoginDto loginDto){
 
         return userService.login(loginDto);
 

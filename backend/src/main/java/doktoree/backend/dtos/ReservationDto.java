@@ -50,7 +50,7 @@ public class ReservationDto {
     private Set<Classroom> classrooms;
 	
     private String subjectName;
-    private CouncilType conucilType;
+    private CouncilType councilType;
     private String shortDescription;
     private String name;
     private Department department;

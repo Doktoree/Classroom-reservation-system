@@ -42,7 +42,7 @@ public class ReservationMapper {
 			dto.setReservationPurpose("DEPARTMENT");
 		}
 		else if(reservation instanceof CouncilReservation) {
-			dto.setConucilType(((CouncilReservation) reservation).getCouncilType());
+			dto.setCouncilType(((CouncilReservation) reservation).getCouncilType());
 			dto.setReservationPurpose("COUNCIL");
 		}
 		else if(reservation instanceof OtherMeetingReservation) {

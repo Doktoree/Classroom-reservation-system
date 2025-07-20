@@ -63,13 +63,13 @@ public class ReservationServiceImpl implements ReservationService {
 	@Override
 	public Response<ReservationDto> findReservationById(Long id) throws EntityNotExistingException {
 		
-		Optional<Reservation> optioanalReservation = reservationRepository.findById(id);
+		Optional<Reservation> optionalReservation = reservationRepository.findById(id);
 		Response<ReservationDto> response = new Response<>();
 		
-		if(optioanalReservation.isEmpty())
+		if(optionalReservation.isEmpty())
 			throw new EntityNotExistingException("There is not reservation with given ID!");
 		
-		Reservation reservation = optioanalReservation.get();
+		Reservation reservation = optionalReservation.get();
 		ReservationDto dto = ReservationMapper.mapToReservationDto(reservation);
 		response.setDto(dto);
 		response.setMessage("Reservation successfully found!");
@@ -79,15 +79,19 @@ public class ReservationServiceImpl implements ReservationService {
 
 	@Transactional
 	@Override
-	public Response<ReservationDto> saveReservation(ReservationDto dto) throws EntityNotExistingException {
+	public Response<ReservationDto> saveReservation(ReservationDto dto) throws EntityNotSavedException {
 		
 		Reservation reservation = ReservationFactory.createReservation(dto);
 		Response<ReservationDto> response = new Response<>();
 		
 		Set<Classroom> classrooms = dto.getClassrooms();
-		for(Classroom c: classrooms) {		
-			classroomRepository.findById(c.getId()).orElseThrow(()-> new InvalidForeignKeyException("There is no classroom with given ID!"));			
-		}
+
+		classrooms.forEach((c) -> {
+
+			classroomRepository.findById(c.getId()).orElseThrow(()-> new InvalidForeignKeyException("There is no classroom with given ID!"));
+
+		});
+
 		userRepository.findById(dto.getUser().getId()).orElseThrow(()-> new InvalidForeignKeyException("There is no user with given ID!"));
 		
 		try {
@@ -100,7 +104,7 @@ public class ReservationServiceImpl implements ReservationService {
 			response.setMessage("Reservation successfully saved!");
 			return response;
 		} catch (Exception e) {
-			throw new EntityNotSavedException("Reservation can not be saved! "  + e.getMessage());
+			throw new EntityNotSavedException("Reservation can not be saved!");
 		}
 		
 	}
@@ -114,7 +118,7 @@ public class ReservationServiceImpl implements ReservationService {
 	@Override
 	public Response<List<ReservationDto>> getAllReservations(int pageNumber) throws EmptyEntityListException {
 		
-		List<ReservationDto> reservationDtos = new ArrayList<>();
+		List<ReservationDto> reservationDtos;
 		Page<Reservation> reservationsPage = reservationRepository.findAll(PageRequest.of(pageNumber, 10));
 		List<Reservation> reservations = reservationsPage.getContent();
 		Response<List<ReservationDto>> response = new Response<>();
@@ -140,9 +144,11 @@ public class ReservationServiceImpl implements ReservationService {
 			throw new EntityNotExistingException("There is not reservation with given ID!");
 		
 		Set<Classroom> classrooms = dto.getClassrooms();
-		for(Classroom c: classrooms) {		
-			classroomRepository.findById(c.getId()).orElseThrow(()-> new InvalidForeignKeyException("There is no classroom with given ID!"));			
-		}
+
+		classrooms.forEach((c) -> {
+			classroomRepository.findById(c.getId()).orElseThrow(()-> new InvalidForeignKeyException("There is no classroom with given ID!"));
+		});
+
 		userRepository.findById(dto.getUser().getId()).orElseThrow(()-> new InvalidForeignKeyException("There is no user with given ID!"));
 		
 		try {
@@ -151,13 +157,13 @@ public class ReservationServiceImpl implements ReservationService {
 			ReservationNotification reservationNotification = new ReservationNotification(null, "Some of classrooms have been changed!", updatedReservation, updatedReservation.getUser());
 			ReservationNotification savedReservationNotification = notificationRepository.save(reservationNotification);
 			mailService.sendEmailChangeClassrooms(savedReservationNotification);
-			ReservationDto updatedReseravtionDto = ReservationMapper.mapToReservationDto(updatedReservation);
+			ReservationDto updatedReservationDto = ReservationMapper.mapToReservationDto(updatedReservation);
 			Response<ReservationDto> response = new Response<>();
-			response.setDto(updatedReseravtionDto);
+			response.setDto(updatedReservationDto);
 			response.setMessage("Reservation is successfully updated!");
 			return response;
 		} catch (Exception e) {
-			throw new EntityNotSavedException("Reservation can not be updated! "  + e.getMessage());
+			throw new EntityNotSavedException("Reservation can not be updated!");
 		}
 		
 		
@@ -191,18 +197,16 @@ public class ReservationServiceImpl implements ReservationService {
 
 			Set<Classroom> classrooms = new HashSet<>();
 
-			for(Reservation r: reservations){
+			reservations.forEach(r -> {
 
-				for(Classroom c: r.getClassrooms()){
+				r.getClassrooms().forEach(c -> {
 
 					Optional<Classroom> optionalClassroom = classroomRepository.findById(c.getId());
 					classrooms.add(optionalClassroom.get());
 
-				}
+				});
 
-			}
-
-		System.out.println("Classroom not available size: " + classrooms.size());
+			});
 
 			List<Classroom> allClassrooms = classroomRepository.findAll();
 			allClassrooms.removeAll(classrooms);

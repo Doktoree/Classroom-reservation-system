@@ -16,7 +16,7 @@ public class ReservaitonNotificationMapper {
 	public static ReservationNotificationDto mapToReservationNotificationDto(ReservationNotification rn) {
 		
 		
-		return new ReservationNotificationDto(rn.getId(), rn.getMessage(), rn.getReservaiton(), rn.getUser());
+		return new ReservationNotificationDto(rn.getId(), rn.getMessage(), rn.getReservation(), rn.getUser());
 		
 	}
 	

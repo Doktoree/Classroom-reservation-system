@@ -3,6 +3,7 @@ package doktoree.backend.service;
 import doktoree.backend.domain.*;
 import doktoree.backend.dtos.EmployeeDto;
 import doktoree.backend.dtos.ReservationNotificationDto;
+import doktoree.backend.enums.Status;
 import doktoree.backend.error_response.Response;
 import doktoree.backend.exceptions.EmptyEntityListException;
 import doktoree.backend.exceptions.EntityNotExistingException;
@@ -74,6 +75,7 @@ public class ReservationNotificationServiceTest {
         reservationNotification.setUser(user);
         reservationNotification.setReservation(reservation);
 
+
         reservationNotificationDto = ReservaitonNotificationMapper.mapToReservationNotificationDto(reservationNotification);
 
     }
@@ -90,10 +92,13 @@ public class ReservationNotificationServiceTest {
     @Test
     public void whenSaveReservationNotification_thenReturnsExpectedDto(){
 
+        ReservationStatus rs = new ReservationStatus();
+        rs.setStatus(Status.APPROVED);
+
         Mockito.when(reservationNotificationRepository.save(Mockito.any(ReservationNotification.class))).thenReturn(reservationNotification);
         Mockito.when(reservationRepository.findById(reservationNotification.getReservation().getId())).thenReturn(Optional.of(reservation));
         Mockito.when(userRepository.findById(reservationNotification.getUser().getId())).thenReturn(Optional.of(user));
-        Mockito.when(reservationStatusRepository.findById(reservation.getId())).thenReturn(Optional.of(new ReservationStatus()));
+        Mockito.when(reservationStatusRepository.findById(reservation.getId())).thenReturn(Optional.of(rs));
         Response<ReservationNotificationDto> response = notificationService.saveReservationNotification(reservationNotificationDto);
         check(response.getDto(), reservationNotification);
         Mockito.verify(reservationNotificationRepository).save(Mockito.any(ReservationNotification.class));

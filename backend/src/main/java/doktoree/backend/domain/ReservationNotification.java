@@ -30,7 +30,7 @@ public class ReservationNotification {
 	
 	@ManyToOne
 	@JoinColumn(name = "reservation_id", nullable = false)
-	private Reservation reservaiton;
+	private Reservation reservation;
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)

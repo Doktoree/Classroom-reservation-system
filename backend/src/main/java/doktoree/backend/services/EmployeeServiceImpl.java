@@ -49,7 +49,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		List<Employee> employees = employeesPage.getContent();
 		
 		if(employees.isEmpty())
-			throw new EmptyEntityListException("There are no reservations!");
+			throw new EmptyEntityListException("There are no employees!");
 		
 		List<EmployeeDto> employeesDto = employees.stream().map(EmployeeMapper::mapToEmployeeDto).collect(Collectors.toList());
 		Response<List<EmployeeDto>> response = new Response<>();
