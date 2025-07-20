@@ -4,11 +4,10 @@ import doktoree.backend.domain.Reservation;
 import doktoree.backend.domain.ReservationNotification;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.util.stream.Collectors;
 
 @Data
-public class ChangeClassroomsTemplate implements Serializable {
+public class ChangeClassroomsTemplate{
 
     private ReservationNotification reservationNotification;
 
@@ -32,7 +31,7 @@ public class ChangeClassroomsTemplate implements Serializable {
 
     public String formMailText(){
 
-        Reservation reservation = reservationNotification.getReservaiton();
+        Reservation reservation = reservationNotification.getReservation();
 
         String text = "Poštovani, <br><br>" +
                 "Došlo je do promene rezervacije:<br>" +
