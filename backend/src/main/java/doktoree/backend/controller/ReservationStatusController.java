@@ -6,11 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
 import doktoree.backend.dtos.ReservationStatusDto;
-import doktoree.backend.error_response.Response;
+import doktoree.backend.errorresponse.Response;
 import doktoree.backend.services.ReservationStatusServiceImpl;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/reservation-status")
@@ -27,7 +33,9 @@ public class ReservationStatusController {
 	}
 
 	@GetMapping("{id}")
-	public ResponseEntity<Response<ReservationStatusDto>> getReservationStatus(@PathVariable Long id){
+	public ResponseEntity<Response<ReservationStatusDto>> getReservationStatus(
+			@PathVariable Long id
+	) {
 		
 		return ResponseEntity.ok(reservationStatusService.findReservationStatusById(id));
 		
@@ -35,22 +43,30 @@ public class ReservationStatusController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
-	public ResponseEntity<Response<ReservationStatusDto>> saveReservationStatus(@RequestBody ReservationStatusDto dto){
+	public ResponseEntity<Response<ReservationStatusDto>> saveReservationStatus(
+			@RequestBody ReservationStatusDto dto
+	) {
 		
-		return ResponseEntity.status(HttpStatus.CREATED).body(reservationStatusService.saveReservationStatus(dto));
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.body(reservationStatusService.saveReservationStatus(dto));
 		
 	}
 	
 	@GetMapping("/user/{id}")
-	public ResponseEntity<Response<List<ReservationStatusDto>>> getAllReservationStatusFromUser(@PathVariable Long id){
+	public ResponseEntity<Response<List<ReservationStatusDto>>> getAllReservationStatusFromUser(
+			@PathVariable Long id
+	) {
 		
-		return ResponseEntity.ok(reservationStatusService.getAllReservationStatusFromUser(id));
+		return ResponseEntity.ok(reservationStatusService
+				.getAllReservationStatusFromUser(id));
 		
 	}
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping("/approve")
-	public ResponseEntity<Response<ReservationStatusDto>> approveReservation(@RequestBody ReservationStatusDto dto){
+	public ResponseEntity<Response<ReservationStatusDto>> approveReservation(
+			@RequestBody ReservationStatusDto dto
+	) {
 		
 		return ResponseEntity.ok(reservationStatusService.approveReservation(dto));
 		
@@ -58,7 +74,9 @@ public class ReservationStatusController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping("/reject")
-	public ResponseEntity<Response<ReservationStatusDto>> rejectReservation(@RequestBody ReservationStatusDto dto){
+	public ResponseEntity<Response<ReservationStatusDto>> rejectReservation(
+			@RequestBody ReservationStatusDto dto
+	) {
 		
 		return ResponseEntity.ok(reservationStatusService.rejectReservation(dto));
 		

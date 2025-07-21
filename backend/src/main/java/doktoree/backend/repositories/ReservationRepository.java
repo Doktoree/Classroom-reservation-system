@@ -17,14 +17,17 @@ import doktoree.backend.domain.Reservation;
 import doktoree.backend.domain.User;
 
 @Repository
-public interface ReservationRepository extends JpaRepository<Reservation, Long>{
+public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
 	public Page<Reservation> findByUser(User user, Pageable pageable);
+
+	public List<Reservation> findByUser(User user);
 	
 	public Page<Reservation> findAll(Pageable pageable);
 	
-	public List<Reservation> findByUser(User user);
-
-	public List<Reservation> findByDateAndStartTimeGreaterThanAndEndTimeLessThan(LocalDate date, LocalTime startTime, LocalTime endTime);
+	public List<Reservation> findByDateAndStartTimeAfterAndEndTimeBefore(
+			LocalDate date, LocalTime startTime, LocalTime endTime
+	);
 	
 }
+

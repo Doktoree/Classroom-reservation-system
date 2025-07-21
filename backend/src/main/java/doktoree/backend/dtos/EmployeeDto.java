@@ -38,7 +38,7 @@ public class EmployeeDto {
 
 	@AssertTrue(message = "Academic rank must be valid value!")
 	@JsonIgnore()
-	public boolean isAcademicRankInScope(){
+	public boolean isAcademicRankInScope() {
 
 		EnumHandler<AcademicRank> enumHandler = new EnumHandler<>(AcademicRank.class);
 		return enumHandler.isValid(academicRank);
@@ -47,7 +47,7 @@ public class EmployeeDto {
 
 	@AssertTrue(message = "Title must be valid value!")
 	@JsonIgnore()
-	public boolean isTitleInScope(){
+	public boolean isTitleInScope() {
 
 		EnumHandler<Title> enumHandler = new EnumHandler<>(Title.class);
 		return enumHandler.isValid(title);

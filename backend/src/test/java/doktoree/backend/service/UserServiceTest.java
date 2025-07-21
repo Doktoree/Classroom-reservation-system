@@ -2,10 +2,9 @@ package doktoree.backend.service;
 
 import doktoree.backend.domain.Employee;
 import doktoree.backend.domain.User;
-import doktoree.backend.dtos.EmployeeDto;
 import doktoree.backend.dtos.UserDto;
 import doktoree.backend.enums.Role;
-import doktoree.backend.error_response.Response;
+import doktoree.backend.errorresponse.Response;
 import doktoree.backend.exceptions.EmptyEntityListException;
 import doktoree.backend.exceptions.EntityNotExistingException;
 import doktoree.backend.exceptions.EntityNotSavedException;
@@ -13,7 +12,6 @@ import doktoree.backend.exceptions.InvalidForeignKeyException;
 import doktoree.backend.mapper.UserMapper;
 import doktoree.backend.repositories.EmployeeRepository;
 import doktoree.backend.repositories.UserRepository;
-import doktoree.backend.security.UserService;
 import doktoree.backend.services.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +24,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.parameters.P;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +90,7 @@ public class UserServiceTest {
 
         Mockito.when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         Response<UserDto> response = userService.findUserById(user.getId());
-        check(response.getDto(),user);
+        check(response.getDtoT(),user);
 
     }
 
@@ -119,7 +116,7 @@ public class UserServiceTest {
         Mockito.when(employeeRepository.findById(user.getEmployee().getId())).thenReturn(Optional.of(employee));
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
         Response<UserDto> response = userService.saveUser(UserMapper.mapToUserDto(user));
-        check(response.getDto(), user);
+        check(response.getDtoT(), user);
 
 
     }
@@ -160,7 +157,7 @@ public class UserServiceTest {
 
         Mockito.when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         Response<UserDto> response = userService.deleteUser(user.getId());
-        check(response.getDto(), user);
+        check(response.getDtoT(), user);
 
     }
 
@@ -186,8 +183,8 @@ public class UserServiceTest {
         Page<User> page = new PageImpl<>(users);
         Mockito.when(userRepository.findAll(PageRequest.of(1,10))).thenReturn(page);
         Response<List<UserDto>> response = userService.getAllUsers(1);
-        check(response.getDto().get(0), user);
-        check(response.getDto().get(1), user2);
+        check(response.getDtoT().get(0), user);
+        check(response.getDtoT().get(1), user2);
 
     }
 
@@ -213,7 +210,7 @@ public class UserServiceTest {
 
         Mockito.when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         Response<UserDto> response = userService.updateUser(UserMapper.mapToUserDto(user));
-        check(response.getDto(),user);
+        check(response.getDtoT(),user);
     }
 
     @DisplayName("Update user - should throw EntityNotExistingException")

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import doktoree.backend.domain.Classroom;
 import doktoree.backend.dtos.ClassroomDto;
-import doktoree.backend.error_response.Response;
+import doktoree.backend.errorresponse.Response;
 import doktoree.backend.exceptions.EntityNotDeletedException;
 import doktoree.backend.exceptions.EntityNotExistingException;
 import doktoree.backend.exceptions.EntityNotSavedException;
@@ -29,16 +29,18 @@ public class ClassroomServiceImpl implements ClassroomService {
 	}
 
 	@Override
-	public Response<ClassroomDto> findClassroomById(Long id) throws EntityNotExistingException {
+	public Response<ClassroomDto> findClassroomById(Long id)
+			throws EntityNotExistingException {
 		
 		Optional<Classroom> optionalClassroom = classroomRepository.findById(id);
 		Response<ClassroomDto> response = new Response<>();
 		
 		
-		if(optionalClassroom.isPresent()) {
+		if (optionalClassroom.isPresent()) {
 			
-			ClassroomDto classroomDto = ClassroomMapper.mapToClassroomDto(optionalClassroom.get());
-			response.setDto(classroomDto);
+			ClassroomDto classroomDto = ClassroomMapper
+					.mapToClassroomDto(optionalClassroom.get());
+			response.setDtoT(classroomDto);
 			response.setMessage("Classroom found successfully!");
 			return response;
 			
@@ -49,14 +51,15 @@ public class ClassroomServiceImpl implements ClassroomService {
 	}
 
 	@Override
-	public Response<ClassroomDto> saveClassroom(ClassroomDto dto) throws EntityNotSavedException {
+	public Response<ClassroomDto> saveClassroom(ClassroomDto dto)
+			throws EntityNotSavedException {
 		
 		Classroom classroom = ClassroomMapper.mapToClassroom(dto);
 		Response<ClassroomDto> response = new Response<>();
 		
 		try {
 			Classroom savedClassroom = classroomRepository.save(classroom);
-			response.setDto(ClassroomMapper.mapToClassroomDto(savedClassroom));
+			response.setDtoT(ClassroomMapper.mapToClassroomDto(savedClassroom));
 			response.setMessage("Classroom successfully saved!");
 			return response;
 		} catch (Exception e) {
@@ -67,19 +70,24 @@ public class ClassroomServiceImpl implements ClassroomService {
 	}
 
 	@Override
-	public Response<ClassroomDto> deleteClassroom(Long id) throws EntityNotExistingException, EntityNotDeletedException {
+	public Response<ClassroomDto> deleteClassroom(Long id)
+			throws EntityNotExistingException, EntityNotDeletedException {
 
 		Optional<Classroom> optionalClassroom = classroomRepository.findById(id);
 		
-		if(!optionalClassroom.isPresent())
-			throw new EntityNotExistingException("There is not classroom with given ID!");
+		if (optionalClassroom.isEmpty()) {
+			throw new EntityNotExistingException(
+					"There is not classroom with given ID!"
+			);
+		}
+
 		
 		try {
 			classroomRepository.deleteById(id);
 			Classroom classroom = optionalClassroom.get();
 			ClassroomDto dto = ClassroomMapper.mapToClassroomDto(classroom);
 			Response<ClassroomDto> response = new Response<>();
-			response.setDto(dto);
+			response.setDtoT(dto);
 			response.setMessage("Classroom successfully deleted!");
 			return response;
 		} catch (Exception e) {
@@ -93,20 +101,29 @@ public class ClassroomServiceImpl implements ClassroomService {
 		
 		List<Classroom> classrooms = classroomRepository.findAll();
 
-		if(classrooms.isEmpty())
+		if (classrooms.isEmpty()) {
 			throw new EmptyEntityListException("There are no classrooms!");
+		}
 
-		List<ClassroomDto> classroomDtos =  classrooms.stream().map(ClassroomMapper::mapToClassroomDto).collect(Collectors.toList());
+
+		List<ClassroomDto> classroomDtos =  classrooms.stream()
+				.map(ClassroomMapper::mapToClassroomDto)
+				.collect(Collectors.toList());
 		Response<List<ClassroomDto>> response = new Response<>();
-		response.setDto(classroomDtos);
+		response.setDtoT(classroomDtos);
 		response.setMessage("All classrooms found successfully!");
 		return response;
 	}
 
 	@Override
-	public Response<ClassroomDto> updateClassroom(ClassroomDto dto) throws EntityNotExistingException, EntityNotSavedException {
+	public Response<ClassroomDto> updateClassroom(ClassroomDto dto)
+			throws EntityNotExistingException, EntityNotSavedException {
 			
-		Classroom classroom = classroomRepository.findById(dto.getId()).orElseThrow(()-> new EntityNotExistingException("There is not classroom with given ID!"));
+		Classroom classroom = classroomRepository
+				.findById(dto.getId())
+				.orElseThrow(() -> new EntityNotExistingException(
+						"There is not classroom with given ID!"
+				));
 		
 		try {
 			classroom.setClassRoomNumber(dto.getClassRoomNumber());
@@ -116,7 +133,7 @@ public class ClassroomServiceImpl implements ClassroomService {
 			classroomRepository.save(classroom);
 			ClassroomDto classroomDto = ClassroomMapper.mapToClassroomDto(classroom);
 			Response<ClassroomDto> response = new Response<>();
-			response.setDto(classroomDto);
+			response.setDtoT(classroomDto);
 			response.setMessage("Classroom successfully updated!");
 			return response;
 			

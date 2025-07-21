@@ -5,12 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import doktoree.backend.domain.Department;
 import doktoree.backend.domain.Employee;
 import doktoree.backend.domain.User;
-import doktoree.backend.dtos.ClassroomDto;
 import doktoree.backend.dtos.EmployeeDto;
 import doktoree.backend.enums.AcademicRank;
 import doktoree.backend.enums.Role;
 import doktoree.backend.enums.Title;
-import doktoree.backend.error_response.Response;
+import doktoree.backend.errorresponse.Response;
 import doktoree.backend.exceptions.EmptyEntityListException;
 import doktoree.backend.exceptions.EntityNotExistingException;
 import doktoree.backend.mapper.EmployeeMapper;
@@ -33,14 +32,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -146,7 +142,7 @@ public class EmployeeControllerTest {
 
         auth(Role.ADMIN);
         Response<EmployeeDto> response = new Response<>();
-        response.setDto(EmployeeMapper.mapToEmployeeDto(employee));
+        response.setDtoT(EmployeeMapper.mapToEmployeeDto(employee));
         Mockito.when(employeeService.getEmployeeById(employee.getId())).thenReturn(response);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/employee/" + employee.getId())
@@ -158,7 +154,7 @@ public class EmployeeControllerTest {
         Response<EmployeeDto> response1 = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<Response<EmployeeDto>>() {
         });
 
-        check(response1.getDto(), employee);
+        check(response1.getDtoT(), employee);
 
 
     }
@@ -183,7 +179,7 @@ public class EmployeeControllerTest {
 
         auth(Role.USER);
         Response<EmployeeDto> response = new Response<>();
-        response.setDto(EmployeeMapper.mapToEmployeeDto(employee));
+        response.setDtoT(EmployeeMapper.mapToEmployeeDto(employee));
         Mockito.when(employeeService.getEmployeeById(employee.getId())).thenReturn(response);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/employee/" + employee.getId())
@@ -207,7 +203,7 @@ public class EmployeeControllerTest {
 
         List<EmployeeDto> listDto = List.of(employee,employee2).stream().map(EmployeeMapper::mapToEmployeeDto).toList();
         Response<List<EmployeeDto>> response = new Response<>();
-        response.setDto(listDto);
+        response.setDtoT(listDto);
         Mockito.when(employeeService.getAllEmployees(0)).thenReturn(response);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/employee/")
@@ -220,8 +216,8 @@ public class EmployeeControllerTest {
         Response<List<EmployeeDto>> listResponse = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<Response<List<EmployeeDto>>>() {
         });
 
-        check(listResponse.getDto().get(0), employee);
-        check(listResponse.getDto().get(1), employee2);
+        check(listResponse.getDtoT().get(0), employee);
+        check(listResponse.getDtoT().get(1), employee2);
 
     }
 
@@ -262,7 +258,7 @@ public class EmployeeControllerTest {
 
         List<EmployeeDto> listDto = List.of(employee,employee2).stream().map(EmployeeMapper::mapToEmployeeDto).toList();
         Response<List<EmployeeDto>> response = new Response<>();
-        response.setDto(listDto);
+        response.setDtoT(listDto);
         Mockito.when(employeeService.getAllEmployees(0)).thenReturn(response);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/employee/")

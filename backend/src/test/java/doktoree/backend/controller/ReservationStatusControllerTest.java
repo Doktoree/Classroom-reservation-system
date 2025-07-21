@@ -6,22 +6,19 @@ import doktoree.backend.domain.*;
 import doktoree.backend.dtos.ReservationDto;
 import doktoree.backend.dtos.ReservationStatusDto;
 import doktoree.backend.enums.*;
-import doktoree.backend.error_response.Response;
+import doktoree.backend.errorresponse.Response;
 import doktoree.backend.exceptions.EmptyEntityListException;
 import doktoree.backend.exceptions.EntityNotExistingException;
 import doktoree.backend.exceptions.EntityNotSavedException;
 import doktoree.backend.factory.ReservationFactory;
-import doktoree.backend.mapper.ReservationMapper;
 import doktoree.backend.mapper.ReservationStatusMapper;
 import doktoree.backend.repositories.*;
 import doktoree.backend.security.AuthController;
 import doktoree.backend.security.LoginDto;
 import doktoree.backend.security.RegisterDto;
 import doktoree.backend.services.MailServiceImpl;
-import doktoree.backend.services.ReservationServiceImpl;
 import doktoree.backend.services.ReservationStatusServiceImpl;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -215,7 +212,7 @@ public class ReservationStatusControllerTest {
 
         auth(Role.USER);
         Response<ReservationStatusDto> response = new Response<>();
-        response.setDto(ReservationStatusMapper.mapToReservationStatusDto(reservationStatus));
+        response.setDtoT(ReservationStatusMapper.mapToReservationStatusDto(reservationStatus));
 
         Mockito.when(reservationStatusService.findReservationStatusById(reservationStatus.getId())).thenReturn(response);
 
@@ -228,7 +225,7 @@ public class ReservationStatusControllerTest {
         Response<ReservationStatusDto> responseReservationStatus = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<Response<ReservationStatusDto>>() {
         });
 
-        check(responseReservationStatus.getDto(), reservationStatus);
+        check(responseReservationStatus.getDtoT(), reservationStatus);
 
 
     }
@@ -254,7 +251,7 @@ public class ReservationStatusControllerTest {
         auth(Role.USER);
         Response<List<ReservationStatusDto>> response = new Response<>();
         List<ReservationStatusDto> list = reservationStatuses.stream().map(ReservationStatusMapper::mapToReservationStatusDto).toList();
-        response.setDto(list);
+        response.setDtoT(list);
         Mockito.when(reservationStatusService.getAllReservationStatusFromUser(userId)).thenReturn(response);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/reservation-status/user/" + userId )
@@ -266,7 +263,7 @@ public class ReservationStatusControllerTest {
         Response<List<ReservationStatusDto>> responseReservationStatus = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<Response<List<ReservationStatusDto>>>() {
         });
 
-        check(responseReservationStatus.getDto().get(0), reservationStatus);
+        check(responseReservationStatus.getDtoT().get(0), reservationStatus);
 
 
     }
@@ -291,7 +288,7 @@ public class ReservationStatusControllerTest {
 
         auth(Role.ADMIN);
         Response<ReservationStatusDto> response =  new Response<>();
-        response.setDto(ReservationStatusMapper.mapToReservationStatusDto(reservationStatus));
+        response.setDtoT(ReservationStatusMapper.mapToReservationStatusDto(reservationStatus));
         Mockito.when(reservationStatusService.saveReservationStatus(Mockito.any(ReservationStatusDto.class))).thenReturn(response);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/reservation-status")
@@ -303,7 +300,7 @@ public class ReservationStatusControllerTest {
 
         Response<ReservationStatusDto> responseReservation = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<Response<ReservationStatusDto>>(){
         });
-        check(responseReservation.getDto(),reservationStatus);
+        check(responseReservation.getDtoT(),reservationStatus);
 
 
 
@@ -330,7 +327,7 @@ public class ReservationStatusControllerTest {
 
         auth(Role.USER);
         Response<ReservationStatusDto> response =  new Response<>();
-        response.setDto(ReservationStatusMapper.mapToReservationStatusDto(reservationStatus));
+        response.setDtoT(ReservationStatusMapper.mapToReservationStatusDto(reservationStatus));
         Mockito.when(reservationStatusService.saveReservationStatus(Mockito.any(ReservationStatusDto.class))).thenReturn(response);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/reservation-status")
@@ -349,7 +346,7 @@ public class ReservationStatusControllerTest {
         auth(Role.ADMIN);
         reservationStatus.setStatus(Status.APPROVED);
         Response<ReservationStatusDto> response =  new Response<>();
-        response.setDto(ReservationStatusMapper.mapToReservationStatusDto(reservationStatus));
+        response.setDtoT(ReservationStatusMapper.mapToReservationStatusDto(reservationStatus));
         Mockito.when(reservationStatusService.approveReservation(Mockito.any(ReservationStatusDto.class))).thenReturn(response);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.patch("/api/reservation-status/approve")
@@ -362,7 +359,7 @@ public class ReservationStatusControllerTest {
         Response<ReservationStatusDto> responseReservation = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<Response<ReservationStatusDto>>(){
         });
         reservationStatus.setStatus(Status.APPROVED);
-        check(responseReservation.getDto(),reservationStatus);
+        check(responseReservation.getDtoT(),reservationStatus);
 
 
 
@@ -390,7 +387,7 @@ public class ReservationStatusControllerTest {
         auth(Role.USER);
         reservationStatus.setStatus(Status.APPROVED);
         Response<ReservationStatusDto> response =  new Response<>();
-        response.setDto(ReservationStatusMapper.mapToReservationStatusDto(reservationStatus));
+        response.setDtoT(ReservationStatusMapper.mapToReservationStatusDto(reservationStatus));
         Mockito.when(reservationStatusService.approveReservation(Mockito.any(ReservationStatusDto.class))).thenReturn(response);
 
         mockMvc.perform(MockMvcRequestBuilders.patch("/api/reservation-status/approve")
@@ -409,7 +406,7 @@ public class ReservationStatusControllerTest {
         auth(Role.ADMIN);
         reservationStatus.setStatus(Status.REJECTED);
         Response<ReservationStatusDto> response =  new Response<>();
-        response.setDto(ReservationStatusMapper.mapToReservationStatusDto(reservationStatus));
+        response.setDtoT(ReservationStatusMapper.mapToReservationStatusDto(reservationStatus));
         Mockito.when(reservationStatusService.rejectReservation(Mockito.any(ReservationStatusDto.class))).thenReturn(response);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.patch("/api/reservation-status/reject")
@@ -422,7 +419,7 @@ public class ReservationStatusControllerTest {
         Response<ReservationStatusDto> responseReservation = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<Response<ReservationStatusDto>>(){
         });
         reservationStatus.setStatus(Status.REJECTED);
-        check(responseReservation.getDto(),reservationStatus);
+        check(responseReservation.getDtoT(),reservationStatus);
 
 
 
@@ -450,7 +447,7 @@ public class ReservationStatusControllerTest {
         auth(Role.USER);
         reservationStatus.setStatus(Status.REJECTED);
         Response<ReservationStatusDto> response =  new Response<>();
-        response.setDto(ReservationStatusMapper.mapToReservationStatusDto(reservationStatus));
+        response.setDtoT(ReservationStatusMapper.mapToReservationStatusDto(reservationStatus));
         Mockito.when(reservationStatusService.rejectReservation(Mockito.any(ReservationStatusDto.class))).thenReturn(response);
 
         mockMvc.perform(MockMvcRequestBuilders.patch("/api/reservation-status/reject")

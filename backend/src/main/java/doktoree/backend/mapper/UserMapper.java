@@ -11,13 +11,25 @@ public class UserMapper {
 		Employee employee = new Employee();
 		employee.setId(dto.getEmployeeId());
 		
-		return new User(dto.getId(), dto.getEmail(), dto.getPassword(), dto.getRole(), employee);
+		return new User(
+				dto.getId(),
+				dto.getEmail(),
+				dto.getPassword(),
+				dto.getRole(),
+				employee
+		);
 		
 	}
 	
 	public static UserDto mapToUserDto(User user) {
 		
-		return new UserDto(user.getId(), user.getEmail(), user.getPassword(), user.getRole(), user.getEmployee().getId());
+		return new UserDto(
+				user.getId(),
+				user.getEmail(),
+				user.getPassword(),
+				user.getRole(),
+				user.getEmployee().getId()
+		);
 		
 	}
 	

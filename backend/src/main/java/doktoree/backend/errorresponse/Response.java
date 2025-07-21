@@ -1,4 +1,7 @@
-package doktoree.backend.error_response;
+package doktoree.backend.errorresponse;
+
+import java.time.LocalTime;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,10 +12,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErrorResponse {
+public class Response<DtoT> {
 
-	private String error;
-	
+	private DtoT dtoT;
 	private String message;
-	
+	private LocalTime time = LocalTime.now();
 }

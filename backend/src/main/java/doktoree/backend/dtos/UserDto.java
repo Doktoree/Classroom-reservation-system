@@ -34,7 +34,7 @@ public class UserDto {
 
 	@AssertTrue(message = "Role must be valid value!")
 	@JsonIgnore()
-	public boolean isRoleInScope(){
+	public boolean isRoleInScope() {
 
 		EnumHandler<Role> enumHandler = new EnumHandler<>(Role.class);
 		return enumHandler.isValid(role);

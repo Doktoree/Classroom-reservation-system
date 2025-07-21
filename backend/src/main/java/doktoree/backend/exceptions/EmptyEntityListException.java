@@ -1,6 +1,6 @@
 package doktoree.backend.exceptions;
 
-public class EmptyEntityListException extends RuntimeException{
+public class EmptyEntityListException extends RuntimeException {
 
 	
 	public EmptyEntityListException(String message) {

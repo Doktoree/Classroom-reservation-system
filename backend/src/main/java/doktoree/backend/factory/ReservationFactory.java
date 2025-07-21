@@ -41,7 +41,8 @@ public class ReservationFactory {
 			
 		case "DEPARTMENT":
 			reservation = new DepartmentMeetingReservation();
-			((DepartmentMeetingReservation) reservation).setDepartment(dto.getDepartment());
+			((DepartmentMeetingReservation) reservation)
+					.setDepartment(dto.getDepartment());
 			break;
 			
 		case "COUNCIL":
@@ -51,25 +52,31 @@ public class ReservationFactory {
 			
 		case "OTHER":
 			reservation = new OtherMeetingReservation();
-			((OtherMeetingReservation) reservation).setShortDescription(dto.getShortDescription());
+			((OtherMeetingReservation) reservation)
+					.setShortDescription(dto.getShortDescription());
 			break;
 			
 		case "STUDENT_ORGANIZATION":
 			reservation = new StudentOrganizationReservation();
-			((StudentOrganizationReservation) reservation).setStudentOrganization(dto.getStudentOrganization());
+			((StudentOrganizationReservation) reservation)
+					.setStudentOrganization(dto.getStudentOrganization());
 			break;
 			
 		case "OTHER_WORKSHOP":
 			reservation = new OtherWorkshopReservation();
 			((OtherWorkshopReservation) reservation).setName(dto.getName());
-			if(!dto.getWorkshopParticipants().isEmpty() && dto.getWorkshopParticipants()!=null) {
+			if (!dto.getWorkshopParticipants().isEmpty()
+					&& dto.getWorkshopParticipants() != null) {
 				
-				for(WorkshopParticipant participant: dto.getWorkshopParticipants()) {
+				for (WorkshopParticipant p : dto.getWorkshopParticipants()) {
 						
-					participant.setOtherWorkshopReservation((OtherWorkshopReservation)reservation);
+					p.setOtherWorkshopReservation(
+							(OtherWorkshopReservation) reservation
+					);
 					
 				}
-				((OtherWorkshopReservation) reservation).setParticipants(dto.getWorkshopParticipants());
+				((OtherWorkshopReservation) reservation)
+						.setParticipants(dto.getWorkshopParticipants());
 			}
 			
 			break;

@@ -1,25 +1,21 @@
 package doktoree.backend.service;
 
 import doktoree.backend.domain.Reservation;
-import doktoree.backend.domain.ReservationNotification;
 import doktoree.backend.domain.ReservationStatus;
 import doktoree.backend.domain.User;
-import doktoree.backend.dtos.ReservationDto;
 import doktoree.backend.dtos.ReservationNotificationDto;
 import doktoree.backend.dtos.ReservationStatusDto;
 import doktoree.backend.enums.Status;
-import doktoree.backend.error_response.Response;
+import doktoree.backend.errorresponse.Response;
 import doktoree.backend.exceptions.EmptyEntityListException;
 import doktoree.backend.exceptions.EntityNotExistingException;
 import doktoree.backend.exceptions.EntityNotSavedException;
-import doktoree.backend.mapper.ReservaitonNotificationMapper;
 import doktoree.backend.mapper.ReservationStatusMapper;
 import doktoree.backend.repositories.ReservationRepository;
 import doktoree.backend.repositories.ReservationStatusRepository;
 import doktoree.backend.repositories.UserRepository;
 import doktoree.backend.services.ReservationNotificationServiceImpl;
 import doktoree.backend.services.ReservationStatusServiceImpl;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,9 +24,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,7 +94,7 @@ public class ReservationStatusServiceTest {
         reservationNotificationDto.setMessage("Message 1");
 
         reservationNotificationDtoResponse = new Response<>();
-        reservationNotificationDtoResponse.setDto(reservationNotificationDto);
+        reservationNotificationDtoResponse.setDtoT(reservationNotificationDto);
 
     }
 
@@ -119,7 +112,7 @@ public class ReservationStatusServiceTest {
 
         Mockito.when(reservationStatusRepository.findById(reservation.getId())).thenReturn(Optional.of(reservationStatus));
         Response<ReservationStatusDto> response = reservationStatusService.findReservationStatusById(reservation.getId());
-        check(response.getDto(), reservationStatus);
+        check(response.getDtoT(), reservationStatus);
 
     }
 
@@ -146,7 +139,7 @@ public class ReservationStatusServiceTest {
         Mockito.when(reservationRepository.findById(reservation.getId())).thenReturn(Optional.of(reservation));
         Mockito.when(reservationStatusRepository.save(Mockito.any(ReservationStatus.class))).thenReturn(reservationStatus);
         Response<ReservationStatusDto> response = reservationStatusService.saveReservationStatus(ReservationStatusMapper.mapToReservationStatusDto(reservationStatus));
-        check(response.getDto(), reservationStatus);
+        check(response.getDtoT(), reservationStatus);
 
 
     }
@@ -214,8 +207,8 @@ public class ReservationStatusServiceTest {
         });
 
         Response<List<ReservationStatusDto>> response = reservationStatusService.getAllReservationStatusFromUser(user.getId());
-        check(response.getDto().get(0), reservationStatus);
-        check(response.getDto().get(1), reservationStatus2);
+        check(response.getDtoT().get(0), reservationStatus);
+        check(response.getDtoT().get(1), reservationStatus2);
 
 
     }
@@ -246,7 +239,7 @@ public class ReservationStatusServiceTest {
 
         Mockito.when(reservationNotificationService.saveReservationNotification(Mockito.any())).thenReturn(reservationNotificationDtoResponse);
         Response<ReservationStatusDto> response = reservationStatusService.approveReservation(ReservationStatusMapper.mapToReservationStatusDto(reservationStatus));
-        ReservationStatusDto dto = response.getDto();
+        ReservationStatusDto dto = response.getDtoT();
         assertThat(dto.getStatus()).isEqualTo(reservationStatus.getStatus());
 
     }
@@ -325,7 +318,7 @@ public class ReservationStatusServiceTest {
 
         Mockito.when(reservationNotificationService.saveReservationNotification(Mockito.any())).thenReturn(reservationNotificationDtoResponse);
         Response<ReservationStatusDto> response = reservationStatusService.rejectReservation(ReservationStatusMapper.mapToReservationStatusDto(reservationStatus));
-        ReservationStatusDto dto = response.getDto();
+        ReservationStatusDto dto = response.getDtoT();
         assertThat(dto.getStatus()).isEqualTo(reservationStatus.getStatus());
 
     }

@@ -145,7 +145,7 @@ public class ReservationRepositoryTest {
 
         reservationRepository.saveAll(List.of(reservation,reservation2));
         List<Reservation> reservations = reservationRepository
-                .findByDateAndStartTimeGreaterThanAndEndTimeLessThan(LocalDate.now(), LocalTime.of(12,1), LocalTime.of(17,0));
+                .findByDateAndStartTimeAfterAndEndTimeBefore(LocalDate.now(), LocalTime.of(12,1), LocalTime.of(17,0));
         Assertions.assertThat(reservations.size()).isEqualTo(2);
         Assertions.assertThat(reservations.get(0).getId()).isEqualTo(reservation.getId());
         Assertions.assertThat(reservations.get(1).getId()).isEqualTo(reservation2.getId());

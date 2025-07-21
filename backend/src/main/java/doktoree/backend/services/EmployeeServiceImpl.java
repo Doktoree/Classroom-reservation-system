@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import doktoree.backend.domain.Employee;
 import doktoree.backend.dtos.EmployeeDto;
-import doktoree.backend.error_response.Response;
+import doktoree.backend.errorresponse.Response;
 import doktoree.backend.exceptions.EmptyEntityListException;
 import doktoree.backend.exceptions.EntityNotExistingException;
 import doktoree.backend.mapper.EmployeeMapper;
@@ -27,14 +27,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 		this.employeeRepository = employeeRepository;
 	}
 
-	public Response<EmployeeDto> getEmployeeById(Long id) throws EntityNotExistingException {
+	public Response<EmployeeDto> getEmployeeById(Long id)
+			throws EntityNotExistingException {
 		
 		Optional<Employee> optionalEmployee = employeeRepository.findById(id);
 		
-		if(optionalEmployee.isPresent()) {
+		if (optionalEmployee.isPresent()) {
 			EmployeeDto dto = EmployeeMapper.mapToEmployeeDto(optionalEmployee.get());
 			Response<EmployeeDto> response = new Response<>();
-			response.setDto(dto);
+			response.setDtoT(dto);
 			response.setMessage("Employee found successfully!");;
 			return response;
 		}
@@ -43,17 +44,22 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public Response<List<EmployeeDto>> getAllEmployees(int pageNumber) throws EmptyEntityListException {
+	public Response<List<EmployeeDto>> getAllEmployees(int pageNumber)
+			throws EmptyEntityListException {
 		
-		Page<Employee> employeesPage = employeeRepository.findAll(PageRequest.of(pageNumber, 10));
+		Page<Employee> employeesPage = employeeRepository
+				.findAll(PageRequest.of(pageNumber, 10));
 		List<Employee> employees = employeesPage.getContent();
 		
-		if(employees.isEmpty())
+		if (employees.isEmpty()) {
 			throw new EmptyEntityListException("There are no employees!");
+		}
+
 		
-		List<EmployeeDto> employeesDto = employees.stream().map(EmployeeMapper::mapToEmployeeDto).collect(Collectors.toList());
+		List<EmployeeDto> employeesDto = employees.stream()
+				.map(EmployeeMapper::mapToEmployeeDto).collect(Collectors.toList());
 		Response<List<EmployeeDto>> response = new Response<>();
-		response.setDto(employeesDto);
+		response.setDtoT(employeesDto);
 		response.setMessage("All employees successfully found!");
 		
 		

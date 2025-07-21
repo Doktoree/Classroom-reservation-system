@@ -2,17 +2,15 @@ package doktoree.backend.service;
 
 import doktoree.backend.domain.*;
 import doktoree.backend.dtos.ClassroomDto;
-import doktoree.backend.dtos.EmployeeDto;
 import doktoree.backend.dtos.ReservationDto;
 import doktoree.backend.enums.ClassRoomType;
-import doktoree.backend.error_response.Response;
+import doktoree.backend.errorresponse.Response;
 import doktoree.backend.exceptions.EmptyEntityListException;
 import doktoree.backend.exceptions.EntityNotExistingException;
 import doktoree.backend.exceptions.EntityNotSavedException;
 import doktoree.backend.exceptions.InvalidForeignKeyException;
 import doktoree.backend.factory.ReservationFactory;
 import doktoree.backend.mapper.ClassroomMapper;
-import doktoree.backend.mapper.ReservationMapper;
 import doktoree.backend.repositories.ClassroomRepository;
 import doktoree.backend.repositories.ReservationNotificationRepository;
 import doktoree.backend.repositories.ReservationRepository;
@@ -121,7 +119,7 @@ public class ReservationServiceTest {
 
         Mockito.when(reservationRepository.findById(reservation.getId())).thenReturn(Optional.of(reservation));
         Response<ReservationDto> response = reservationService.findReservationById(reservation.getId());
-        check(response.getDto(), reservation);
+        check(response.getDtoT(), reservation);
 
 
     }
@@ -154,7 +152,7 @@ public class ReservationServiceTest {
         Mockito.when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         Mockito.when(reservationRepository.save(Mockito.any(Reservation.class))).thenReturn(reservation);
         Response<ReservationDto> response = reservationService.saveReservation(reservationDto);
-        check(response.getDto(), reservation);
+        check(response.getDtoT(), reservation);
 
 
     }
@@ -223,7 +221,7 @@ public class ReservationServiceTest {
         Page<Reservation> page = new PageImpl<>(reservations);
         Mockito.when(reservationRepository.findAll(PageRequest.of(1,10))).thenReturn(page);
         Response<List<ReservationDto>> response = reservationService.getAllReservations(1);
-        check(response.getDto().get(0), reservation);
+        check(response.getDtoT().get(0), reservation);
 
     }
 
@@ -257,7 +255,7 @@ public class ReservationServiceTest {
         Mockito.when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         Mockito.when(reservationRepository.save(Mockito.any(Reservation.class))).thenReturn(reservation);
         Response<ReservationDto> response = reservationService.updateReservation(reservationDto);
-        check(response.getDto(), reservation);
+        check(response.getDtoT(), reservation);
 
     }
 
@@ -350,8 +348,8 @@ public class ReservationServiceTest {
         Mockito.when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         Mockito.when(reservationRepository.findByUser(user,PageRequest.of(1,10))).thenReturn(page);
         Response<List<ReservationDto>> response = reservationService.getAllReservationsFromUser(user.getId(), 1);
-        check(response.getDto().get(0), reservation);
-        check(response.getDto().get(1), reservation2);
+        check(response.getDtoT().get(0), reservation);
+        check(response.getDtoT().get(1), reservation2);
 
     }
 
@@ -389,7 +387,7 @@ public class ReservationServiceTest {
     @Test
     public void whenGetAllAvailableClassrooms_thenReturnsExpectedDto(){
 
-        Mockito.when(reservationRepository.findByDateAndStartTimeGreaterThanAndEndTimeLessThan(reservation.getDate(), reservation.getStartTime(), reservation.getEndTime()))
+        Mockito.when(reservationRepository.findByDateAndStartTimeAfterAndEndTimeBefore(reservation.getDate(), reservation.getStartTime(), reservation.getEndTime()))
                 .thenReturn(reservations);
         classrooms.forEach(c -> {
 
@@ -402,14 +400,14 @@ public class ReservationServiceTest {
         classrooms2.add(c);
         Mockito.when(classroomRepository.findAll()).thenReturn(classrooms2);
         Response<List<ClassroomDto>> response = reservationService.getAllAvailableClassrooms(reservationDto);
-        assertThat(response.getDto().get(0)).isEqualTo(ClassroomMapper.mapToClassroomDto(c));
+        assertThat(response.getDtoT().get(0)).isEqualTo(ClassroomMapper.mapToClassroomDto(c));
     }
 
     @DisplayName("Get all available classrooms - should return expected DTO")
     @Test
     public void whenGetAllAvailableClassrooms_thenThrowsException(){
 
-        Mockito.when(reservationRepository.findByDateAndStartTimeGreaterThanAndEndTimeLessThan(reservation.getDate(), reservation.getStartTime(), reservation.getEndTime()))
+        Mockito.when(reservationRepository.findByDateAndStartTimeAfterAndEndTimeBefore(reservation.getDate(), reservation.getStartTime(), reservation.getEndTime()))
                 .thenReturn(reservations);
         classrooms.forEach(c -> {
 

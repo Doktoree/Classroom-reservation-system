@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudentOrganizationReservation extends Reservation{
+public class StudentOrganizationReservation extends Reservation {
 
 	@ManyToOne
 	@JoinColumn(name = "student_organization_id")

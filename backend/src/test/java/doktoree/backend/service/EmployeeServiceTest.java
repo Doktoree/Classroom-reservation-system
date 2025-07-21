@@ -5,13 +5,11 @@ import doktoree.backend.domain.Employee;
 import doktoree.backend.dtos.EmployeeDto;
 import doktoree.backend.enums.AcademicRank;
 import doktoree.backend.enums.Title;
-import doktoree.backend.error_response.Response;
+import doktoree.backend.errorresponse.Response;
 import doktoree.backend.exceptions.EmptyEntityListException;
 import doktoree.backend.exceptions.EntityNotExistingException;
 import doktoree.backend.repositories.EmployeeRepository;
-import doktoree.backend.services.EmployeeService;
 import doktoree.backend.services.EmployeeServiceImpl;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,13 +21,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.doThrow;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,7 +76,7 @@ public class EmployeeServiceTest {
 
         Mockito.when(employeeRepository.findById(employee.getId())).thenReturn(Optional.ofNullable(employee));
         Response<EmployeeDto> response = employeeService.getEmployeeById(employee.getId());
-        check(response.getDto(), employee);
+        check(response.getDtoT(), employee);
 
     }
 
@@ -119,11 +115,11 @@ public class EmployeeServiceTest {
         Mockito.when(employeeRepository.findAll(PageRequest.of(1,10))).thenReturn(page);
 
         Response<List<EmployeeDto>> response = employeeService.getAllEmployees(1);
-        assertThat(response.getDto()).isNotEmpty();
-        assertThat(response.getDto()).isNotNull();
-        check(response.getDto().get(0), employee);
-        check(response.getDto().get(1), employee2);
-        assertThat(response.getDto().size()).isEqualTo(2);
+        assertThat(response.getDtoT()).isNotEmpty();
+        assertThat(response.getDtoT()).isNotNull();
+        check(response.getDtoT().get(0), employee);
+        check(response.getDtoT().get(1), employee2);
+        assertThat(response.getDtoT().size()).isEqualTo(2);
 
     }
 

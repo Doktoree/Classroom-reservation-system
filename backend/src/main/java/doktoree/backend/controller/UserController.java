@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import doktoree.backend.dtos.UserDto;
-import doktoree.backend.error_response.Response;
+import doktoree.backend.errorresponse.Response;
 import doktoree.backend.services.UserServiceImpl;
 
 @RestController
@@ -35,7 +35,7 @@ public class UserController {
 	}
 
 	@GetMapping("{id}")
-	public ResponseEntity<Response<UserDto>> findUserById(@PathVariable Long id){
+	public ResponseEntity<Response<UserDto>> findUserById(@PathVariable Long id) {
 		
 		return ResponseEntity.ok(userService.findUserById(id));
 		
@@ -44,7 +44,7 @@ public class UserController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
-	public ResponseEntity<Response<UserDto>> saveUser(@RequestBody UserDto dto){
+	public ResponseEntity<Response<UserDto>> saveUser(@RequestBody UserDto dto) {
 		
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(userService.saveUser(dto));
@@ -52,7 +52,7 @@ public class UserController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Response<UserDto>> deleteUser(@PathVariable Long id){
+	public ResponseEntity<Response<UserDto>> deleteUser(@PathVariable Long id) {
 		
 		return ResponseEntity.ok(userService.deleteUser(id));
 		
@@ -60,7 +60,9 @@ public class UserController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/all")
-	public ResponseEntity<Response<List<UserDto>>> getAllUsers(@RequestParam(defaultValue = "0") int pageNumber){
+	public ResponseEntity<Response<List<UserDto>>> getAllUsers(
+			@RequestParam(defaultValue = "0") int pageNumber
+	) {
 		
 		return ResponseEntity.ok(userService.getAllUsers(pageNumber));
 		
@@ -68,7 +70,7 @@ public class UserController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping
-	public ResponseEntity<Response<UserDto>> updateUser(@RequestBody UserDto dto){
+	public ResponseEntity<Response<UserDto>> updateUser(@RequestBody UserDto dto) {
 		
 		return ResponseEntity.ok(userService.updateUser(dto));
 	

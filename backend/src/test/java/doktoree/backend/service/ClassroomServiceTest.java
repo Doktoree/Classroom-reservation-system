@@ -3,7 +3,7 @@ package doktoree.backend.service;
 import doktoree.backend.domain.Classroom;
 import doktoree.backend.dtos.ClassroomDto;
 import doktoree.backend.enums.ClassRoomType;
-import doktoree.backend.error_response.Response;
+import doktoree.backend.errorresponse.Response;
 import doktoree.backend.exceptions.EmptyEntityListException;
 import doktoree.backend.exceptions.EntityNotDeletedException;
 import doktoree.backend.exceptions.EntityNotExistingException;
@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mock.*;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -56,7 +55,7 @@ public class ClassroomServiceTest {
         classroom.setId(1L);
         when(classroomRepository.findById(1L)).thenReturn(Optional.ofNullable(classroom));
         Response<ClassroomDto> response = classroomService.findClassroomById(1L);
-        ClassroomDto dto = response.getDto();
+        ClassroomDto dto = response.getDtoT();
         assertThat(dto).isNotNull();
         assertThat(dto.getCapacity()).isEqualTo(20);
         assertThat(dto.getClassRoomType()).isEqualTo(ClassRoomType.COMPUTER_LAB);
@@ -94,7 +93,7 @@ public class ClassroomServiceTest {
                 .classRoomType(ClassRoomType.COMPUTER_LAB)
                 .build();
         Response<ClassroomDto> response = classroomService.saveClassroom(dto);
-        ClassroomDto responseDto = response.getDto();
+        ClassroomDto responseDto = response.getDtoT();
         assertThat(responseDto).isNotNull();
         assertThat(responseDto.getCapacity()).isEqualTo(classroom.getCapacity());
         assertThat(responseDto.getNumberOfComputers()).isEqualTo(classroom.getNumberOfComputers());
@@ -169,8 +168,8 @@ public class ClassroomServiceTest {
         when(classroomRepository.findById(classroom.getId())).thenReturn(Optional.ofNullable(classroom));
         Response<ClassroomDto> response = classroomService.deleteClassroom(classroom.getId());
         assertThat(response.getMessage()).isEqualTo("Classroom successfully deleted!");
-        assertThat(response.getDto().getId()).isEqualTo(classroom.getId());
-        assertThat(response.getDto().getCapacity()).isEqualTo(classroom.getCapacity());
+        assertThat(response.getDtoT().getId()).isEqualTo(classroom.getId());
+        assertThat(response.getDtoT().getCapacity()).isEqualTo(classroom.getCapacity());
         verify(classroomRepository, times(1)).deleteById(classroom.getId());
 
     }
@@ -190,10 +189,10 @@ public class ClassroomServiceTest {
         when(classroomRepository.findAll()).thenReturn(classrooms);
         Response<List<ClassroomDto>> response = classroomService.getAllClassrooms();
 
-        assertThat(response.getDto()).isNotNull();
-        assertThat(response.getDto().size()).isEqualTo(2);
-        assertThat(response.getDto().get(0).getId()).isEqualTo(classroom.getId());
-        assertThat(response.getDto().get(1).getId()).isEqualTo(classroom2.getId());
+        assertThat(response.getDtoT()).isNotNull();
+        assertThat(response.getDtoT().size()).isEqualTo(2);
+        assertThat(response.getDtoT().get(0).getId()).isEqualTo(classroom.getId());
+        assertThat(response.getDtoT().get(1).getId()).isEqualTo(classroom2.getId());
         assertThat(response.getMessage()).isEqualTo("All classrooms found successfully!");
         verify(classroomRepository, times(1)).findAll();
 
@@ -286,8 +285,8 @@ public class ClassroomServiceTest {
 
         Response<ClassroomDto> response = classroomService.updateClassroom(classroomDto);
 
-        assertThat(response.getDto()).isNotNull();
-        assertThat(response.getDto().getId()).isEqualTo(classroomDto.getId());
+        assertThat(response.getDtoT()).isNotNull();
+        assertThat(response.getDtoT().getId()).isEqualTo(classroomDto.getId());
         assertThat(response.getMessage()).isEqualTo("Classroom successfully updated!");
 
         verify(classroomRepository, times(1)).findById(1L);

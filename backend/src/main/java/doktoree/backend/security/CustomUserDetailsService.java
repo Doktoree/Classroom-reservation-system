@@ -1,7 +1,6 @@
 package doktoree.backend.security;
 
 import doktoree.backend.domain.User;
-import doktoree.backend.exceptions.EntityNotExistingException;
 import doktoree.backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,7 +17,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Autowired
-    public CustomUserDetailsService(UserRepository userRepository){
+    public CustomUserDetailsService(UserRepository userRepository) {
 
         this.userRepository = userRepository;
 
@@ -32,10 +31,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         );
 
-        System.out.println("Role: " + user.getRole());
-
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole().toString())));
+        return new org.springframework.security.core.userdetails.User(
+            user.getEmail(), user.getPassword(),
+            Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole().toString()))
+        );
 
     }
 }

@@ -10,7 +10,9 @@ public class EnumHandler<E extends Enum<E>> {
 
     public boolean isValid(E value) {
         for (E constant : enumType.getEnumConstants()) {
-            if (constant == (value)) return true;
+            if (constant == (value)) {
+                return true;
+            }
         }
         return false;
     }

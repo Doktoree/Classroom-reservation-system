@@ -25,37 +25,40 @@ public class ReservationMapper {
 		dto.setUser(reservation.getUser());
 		dto.setId(reservation.getId());
 		
-		if(reservation instanceof ColloquiumReservation) {
-			dto.setSubjectName(((ColloquiumReservation)reservation).getSubjectName());
-			dto.setReservationPurpose("COLLOQUIM");
-		}
-		else if(reservation instanceof ExamReservation) {
-			dto.setSubjectName(((ExamReservation)reservation).getSubjectName());
+		if (reservation instanceof ColloquiumReservation) {
+			dto.setSubjectName(((ColloquiumReservation) reservation).getSubjectName());
+			dto.setReservationPurpose("COLLOQUIUM");
+		} else if (reservation instanceof ExamReservation) {
+			dto.setSubjectName(((ExamReservation) reservation).getSubjectName());
 			dto.setReservationPurpose("EXAM");
-		}
-		else if(reservation instanceof CourseReservation) {
-			dto.setSubjectName(((CourseReservation)reservation).getSubjectName());
+		} else if (reservation instanceof CourseReservation) {
+			dto.setSubjectName(((CourseReservation) reservation).getSubjectName());
 			dto.setReservationPurpose("COURSE");
-		}
-		else if(reservation instanceof DepartmentMeetingReservation) {
-			dto.setDepartment(((DepartmentMeetingReservation)reservation).getDepartment());
+		} else if (reservation instanceof DepartmentMeetingReservation) {
+			dto.setDepartment(
+					((DepartmentMeetingReservation) reservation).getDepartment()
+			);
 			dto.setReservationPurpose("DEPARTMENT");
-		}
-		else if(reservation instanceof CouncilReservation) {
+		} else if (reservation instanceof CouncilReservation) {
 			dto.setCouncilType(((CouncilReservation) reservation).getCouncilType());
 			dto.setReservationPurpose("COUNCIL");
-		}
-		else if(reservation instanceof OtherMeetingReservation) {
-			dto.setShortDescription(((OtherMeetingReservation)reservation).getShortDescription());
+		} else if (reservation instanceof OtherMeetingReservation) {
+			dto.setShortDescription(
+					((OtherMeetingReservation) reservation)
+							.getShortDescription()
+			);
 			dto.setReservationPurpose("OTHER");
-		}
-		else if(reservation instanceof StudentOrganizationReservation) {
-			dto.setStudentOrganization(((StudentOrganizationReservation)reservation).getStudentOrganization());
+		} else if (reservation instanceof StudentOrganizationReservation) {
+			dto.setStudentOrganization(
+					((StudentOrganizationReservation) reservation)
+							.getStudentOrganization()
+			);
 			dto.setReservationPurpose("STUDENT_ORGANIZATION");
-		}
-		else if(reservation instanceof OtherWorkshopReservation) {
+		} else if (reservation instanceof OtherWorkshopReservation) {
 			dto.setName(((OtherWorkshopReservation) reservation).getName());
-			dto.setWorkshopParticipants(((OtherWorkshopReservation) reservation).getParticipants());
+			dto.setWorkshopParticipants(
+					((OtherWorkshopReservation) reservation).getParticipants()
+			);
 			dto.setReservationPurpose("OTHER_WORKSHOP");
 		}
 		

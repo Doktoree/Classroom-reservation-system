@@ -1,6 +1,8 @@
 package doktoree.backend.services;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import doktoree.backend.exceptions.EmptyEntityListException;
@@ -13,18 +15,17 @@ import doktoree.backend.domain.ReservationNotification;
 import doktoree.backend.domain.ReservationStatus;
 import doktoree.backend.domain.User;
 import doktoree.backend.dtos.ReservationNotificationDto;
-import doktoree.backend.enums.Status;
-import doktoree.backend.error_response.Response;
+import doktoree.backend.errorresponse.Response;
 import doktoree.backend.exceptions.EntityNotExistingException;
 import doktoree.backend.exceptions.EntityNotSavedException;
-import doktoree.backend.mapper.ReservaitonNotificationMapper;
+import doktoree.backend.mapper.ReservationNotificationMapper;
 import doktoree.backend.repositories.ReservationNotificationRepository;
 import doktoree.backend.repositories.ReservationRepository;
 import doktoree.backend.repositories.ReservationStatusRepository;
 import doktoree.backend.repositories.UserRepository;
 
 @Service
-public class ReservationNotificationServiceImpl implements ReservationNotificationService{
+public class ReservationNotificationServiceImpl implements ReservationNotificationService {
 
 	
 	private final ReservationNotificationRepository reservationNotificationRepository;
@@ -36,23 +37,35 @@ public class ReservationNotificationServiceImpl implements ReservationNotificati
 	private final ReservationStatusRepository reservationStatusRepository;
 	
 	@Autowired
-	public ReservationNotificationServiceImpl(ReservationNotificationRepository reservationNotificationRepository,
-			ReservationRepository reservationRepository, UserRepository userRepository,
-			ReservationStatusRepository reservationStatusRepository) {
+	public ReservationNotificationServiceImpl(ReservationNotificationRepository resNotRepo,
+			ReservationRepository resRepo, UserRepository userRepo,
+			ReservationStatusRepository resStatusRepo) {
 		super();
-		this.reservationNotificationRepository = reservationNotificationRepository;
-		this.reservationRepository = reservationRepository;
-		this.userRepository = userRepository;
-		this.reservationStatusRepository = reservationStatusRepository;
+		this.reservationNotificationRepository = resNotRepo;
+		this.reservationRepository = resRepo;
+		this.userRepository = userRepo;
+		this.reservationStatusRepository = resStatusRepo;
 	}
 
-	public Response<ReservationNotificationDto> saveReservationNotification(ReservationNotificationDto dto) throws EntityNotSavedException,EntityNotExistingException {
+	public Response<ReservationNotificationDto> saveReservationNotification(
+			ReservationNotificationDto dto
+	)
+			throws EntityNotSavedException, EntityNotExistingException {
 
-		Reservation reservation = reservationRepository.findById(dto.getReservation().getId()).orElseThrow(() -> new EntityNotExistingException("There is not reservation with given ID!"));
-		User user = userRepository.findById(dto.getUser().getId()).orElseThrow(() -> new EntityNotExistingException("There is not user with given ID!"));
-		Optional<ReservationStatus> reservationStatus = reservationStatusRepository.findById(reservation.getId());
+		Reservation reservation = reservationRepository
+				.findById(dto.getReservation().getId())
+				.orElseThrow(() -> new EntityNotExistingException(
+						"There is not reservation with given ID!"
+				));
+		User user = userRepository
+				.findById(dto.getUser().getId())
+				.orElseThrow(() -> new EntityNotExistingException(
+						"There is not user with given ID!"
+				));
+		Optional<ReservationStatus> reservationStatus = reservationStatusRepository
+				.findById(reservation.getId());
 
-		String status = switch (reservationStatus.get().getStatus()){
+		String status = switch (reservationStatus.get().getStatus()) {
 			case REJECTED -> "rejected";
 			case APPROVED -> "approved";
 			default -> "pending";
@@ -67,40 +80,55 @@ public class ReservationNotificationServiceImpl implements ReservationNotificati
 		
 		String message = "Reservation number" + reservation.getId() 
 		+ " in classrooms "  + classroomsMessage
-		+ ", scheduled on " + reservation.getDate() + " , starting at " + reservation.getStartTime() 
-		+ " and ending at " + reservation.getEndTime() + ", has been " + status;
+		+ ", scheduled on " + reservation.getDate()
+	  + " , starting at " + reservation.getStartTime()
+		+ " and ending at " + reservation.getEndTime()
+		+ ", has been " + status;
 		
 		try {
-			ReservationNotification reservationNotification = new ReservationNotification(null, message, reservation, user);
-			ReservationNotification savedReservationNotification = reservationNotificationRepository.save(reservationNotification);
+			ReservationNotification rn = new ReservationNotification(
+					null,
+					message,
+					reservation,
+					user);
+			ReservationNotification savedRn = reservationNotificationRepository
+					.save(rn);
 			Response<ReservationNotificationDto> response = new Response<>();
-			response.setDto(ReservaitonNotificationMapper.mapToReservationNotificationDto(savedReservationNotification));
+			response.setDtoT(ReservationNotificationMapper
+					.mapToReservationNotificationDto(savedRn));
 			response.setMessage("Reservation notification successfully saved!");
 			return response;
 		} catch (Exception e) {
-			throw new EntityNotSavedException("Reservation notification can not be saved! " + e.getMessage());
+			throw new EntityNotSavedException(
+					"Reservation notification can not be saved! "
+							+ e.getMessage()
+			);
 		}
 		
 	}
 
 	@Override
-	public Response<List<ReservationNotificationDto>> getAllReservationNotifications() throws EmptyEntityListException {
+	public Response<List<ReservationNotificationDto>> getAllReservationNotifications()
+			throws EmptyEntityListException {
 		
-		List<ReservationNotification> reservationNotifications = reservationNotificationRepository.findAll();
+		List<ReservationNotification> rns = reservationNotificationRepository.findAll();
 
-		if(reservationNotifications.isEmpty())
-			throw new EmptyEntityListException("There are no reservation notifications!");
+		if (rns.isEmpty()) {
+			throw new EmptyEntityListException(
+					"There are no reservation notifications!"
+			);
+		}
 
-		List<ReservationNotificationDto> notificationDtos = reservationNotifications.stream().map(ReservaitonNotificationMapper::mapToReservationNotificationDto).collect(Collectors.toList());
+
+		List<ReservationNotificationDto> notificationDtos = rns
+				.stream()
+				.map(ReservationNotificationMapper::mapToReservationNotificationDto)
+				.collect(Collectors.toList());
 		Response<List<ReservationNotificationDto>> response = new Response<>();
-		response.setDto(notificationDtos);
+		response.setDtoT(notificationDtos);
 		response.setMessage("All reservation notifications are successfully found!");
 		return response;
 		
 	}
-
-
-
-	
 
 }

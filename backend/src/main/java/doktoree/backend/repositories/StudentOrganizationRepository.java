@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import doktoree.backend.domain.StudentOrganization;
 
 @Repository
-public interface StudentOrganizationRepository extends JpaRepository<StudentOrganization, Long>{
+public interface StudentOrganizationRepository extends JpaRepository<StudentOrganization, Long> {
 
 }

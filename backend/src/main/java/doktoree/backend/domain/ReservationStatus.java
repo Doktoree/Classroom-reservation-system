@@ -41,11 +41,17 @@ public class ReservationStatus {
 	private String rejectingReason;
 	
 	@PrePersist
-    @PreUpdate
+	@PreUpdate
     public void validateRejectionReason() {
-        if (this.status == Status.REJECTED && (rejectingReason == null || rejectingReason.trim().isEmpty())) {
-            throw new IllegalArgumentException("Rejection reason must be provided when the status is REJECTED");
-        } else if (this.status != Status.REJECTED && rejectingReason != null && !rejectingReason.trim().isEmpty()) {
+        if (this.status == Status.REJECTED
+						&& (rejectingReason == null
+						|| rejectingReason.trim().isEmpty())) {
+            throw new IllegalArgumentException(
+						"Rejection reason must be provided when the status is REJECTED"
+						);
+        } else if (this.status != Status.REJECTED
+						&& rejectingReason != null
+						&& !rejectingReason.trim().isEmpty()) {
         	rejectingReason = null;
         }
     }

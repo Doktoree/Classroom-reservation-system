@@ -2,11 +2,15 @@ package doktoree.backend.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import doktoree.backend.enums.ClassRoomType;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.validation.constraints.*;
-import lombok.*;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 
 @Builder
 @Data
@@ -32,12 +36,14 @@ public class ClassroomDto {
 
 	@JsonIgnore
 	@AssertTrue(message = "Classroom type must be valid value!")
-	public boolean isClassroomTypeInScope(){
+	public boolean isClassroomTypeInScope() {
 
-		for(ClassRoomType t: ClassRoomType.values()){
+		for (ClassRoomType t : ClassRoomType.values()) {
 
-			if(classRoomType == t)
+			if (classRoomType == t) {
 				return true;
+			}
+
 
 		}
 

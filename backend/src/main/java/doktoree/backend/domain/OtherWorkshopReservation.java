@@ -18,12 +18,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OtherWorkshopReservation extends Reservation{
+public class OtherWorkshopReservation extends Reservation {
 
 	
 	private String name;
 	
-	@OneToMany(mappedBy = "otherWorkshopReservation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "otherWorkshopReservation",
+			       cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<WorkshopParticipant> participants;
 	 
 	

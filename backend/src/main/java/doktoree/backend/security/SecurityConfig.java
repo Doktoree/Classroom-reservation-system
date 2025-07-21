@@ -19,7 +19,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
-public class SecurityConfig{
+public class SecurityConfig {
 
     @Autowired JwtAuthenticationFilter jwtAuthenticationFilter;
 
@@ -35,7 +35,7 @@ public class SecurityConfig{
                                 .anyRequest()
                                 .authenticated())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .httpBasic(h -> h.disable() );
+                .httpBasic(h -> h.disable());
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

@@ -1,7 +1,7 @@
 package doktoree.backend.services;
 
 import doktoree.backend.domain.ReservationNotification;
-import doktoree.backend.mailTemplates.ChangeClassroomsTemplate;
+import doktoree.backend.mailtemplates.ChangeClassroomsTemplate;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +10,12 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MailServiceImpl implements MailService{
+public class MailServiceImpl implements MailService {
 
     private final JavaMailSender mailSender;
 
     @Autowired
-    public MailServiceImpl(JavaMailSender mailSender){
+    public MailServiceImpl(JavaMailSender mailSender) {
 
         this.mailSender = mailSender;
 
@@ -23,7 +23,8 @@ public class MailServiceImpl implements MailService{
 
 
     @Override
-    public void sendEmailChangeClassrooms(ReservationNotification reservationNotification) throws MessagingException {
+    public void sendEmailChangeClassrooms(ReservationNotification reservationNotification)
+        throws MessagingException {
 
         ChangeClassroomsTemplate template = new ChangeClassroomsTemplate(reservationNotification);
         MimeMessage message = mailSender.createMimeMessage();

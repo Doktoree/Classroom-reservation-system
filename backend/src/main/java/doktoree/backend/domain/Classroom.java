@@ -27,7 +27,7 @@ public class Classroom {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "class_room_number" ,nullable = false)
+	@Column(name = "class_room_number", nullable = false)
 	private String classRoomNumber;
 	
 	@Enumerated(EnumType.STRING)

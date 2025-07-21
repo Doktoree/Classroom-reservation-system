@@ -25,7 +25,7 @@ public class UserService {
     private JwtUtil jwtUtil;
 
     @Autowired
-    public UserService(UserRepository userRepository, JwtUtil jwtUtil){
+    public UserService(UserRepository userRepository, JwtUtil jwtUtil) {
 
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
@@ -33,13 +33,14 @@ public class UserService {
 
     }
 
-    public ResponseEntity<?> register(RegisterDto registerDto){
+    public ResponseEntity<?> register(RegisterDto registerDto) {
 
         Optional<User> optionalUser = userRepository.findByEmail(registerDto.getEmail());
 
-        if(!optionalUser.isEmpty())
+        if (optionalUser.isPresent()) {
             return new ResponseEntity<>("Email is already taken!", HttpStatus.BAD_REQUEST);
 
+        }
         Employee employee = new Employee();
         employee.setId(registerDto.getEmployeeId());
         User user = new User();
@@ -55,17 +56,18 @@ public class UserService {
 
     }
 
-    public ResponseEntity<Map<String, String>> login(LoginDto loginDto){
+    public ResponseEntity<Map<String, String>> login(LoginDto loginDto) {
 
         User user = userRepository
-                .findByEmail(loginDto.getEmail()).orElseThrow(() -> new UsernameNotFoundException("There is no user with given email!"));
+                .findByEmail(loginDto.getEmail())
+                .orElseThrow(
+                    () -> new UsernameNotFoundException("There is no user with given email!")
+                );
 
-        if(!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())){
+        if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
             Map<String, String> wrongPasswordMap = new HashMap<>();
             wrongPasswordMap.put("message", "Wrong password!");
             return new ResponseEntity<>(wrongPasswordMap, HttpStatus.UNAUTHORIZED);
-
-
         }
 
         String token = jwtUtil.generateToken(user);

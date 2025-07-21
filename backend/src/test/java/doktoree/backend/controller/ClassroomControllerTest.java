@@ -1,6 +1,5 @@
 package doktoree.backend.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import doktoree.backend.domain.Classroom;
@@ -12,7 +11,7 @@ import doktoree.backend.enums.AcademicRank;
 import doktoree.backend.enums.ClassRoomType;
 import doktoree.backend.enums.Role;
 import doktoree.backend.enums.Title;
-import doktoree.backend.error_response.Response;
+import doktoree.backend.errorresponse.Response;
 import doktoree.backend.exceptions.EmptyEntityListException;
 import doktoree.backend.exceptions.EntityNotDeletedException;
 import doktoree.backend.exceptions.EntityNotExistingException;
@@ -25,16 +24,12 @@ import doktoree.backend.repositories.UserRepository;
 import doktoree.backend.security.AuthController;
 import doktoree.backend.security.LoginDto;
 import doktoree.backend.security.RegisterDto;
-import doktoree.backend.services.ClassroomService;
 import doktoree.backend.services.ClassroomServiceImpl;
 import doktoree.backend.services.MailServiceImpl;
-import org.aspectj.lang.annotation.Before;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -47,7 +42,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.*;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -170,7 +164,7 @@ public class ClassroomControllerTest {
 
         auth(Role.USER);
         Response<ClassroomDto> response = new Response<>();
-        response.setDto(ClassroomMapper.mapToClassroomDto(classroom));
+        response.setDtoT(ClassroomMapper.mapToClassroomDto(classroom));
         Mockito.when(classroomService.findClassroomById(1L)).thenReturn(response);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/classroom/" + classroom.getId())
                         .header("Authorization", "Bearer " + token)
@@ -181,7 +175,7 @@ public class ClassroomControllerTest {
         Response<ClassroomDto> responseClassroom = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference< Response<ClassroomDto>>() {
         });
 
-        check(responseClassroom.getDto(), classroom);
+        check(responseClassroom.getDtoT(), classroom);
 
 
     }
@@ -205,7 +199,7 @@ public class ClassroomControllerTest {
 
         auth(Role.ADMIN);
         Response<ClassroomDto> response =  new Response<>();
-        response.setDto(ClassroomMapper.mapToClassroomDto(classroom));
+        response.setDtoT(ClassroomMapper.mapToClassroomDto(classroom));
         Mockito.when(classroomService.saveClassroom(Mockito.any(ClassroomDto.class))).thenReturn(response);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/classroom")
@@ -217,7 +211,7 @@ public class ClassroomControllerTest {
 
         Response<ClassroomDto> responseClassroom = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<Response<ClassroomDto>>(){
         });
-        check(responseClassroom.getDto(),classroom);
+        check(responseClassroom.getDtoT(),classroom);
 
 
 
@@ -244,7 +238,7 @@ public class ClassroomControllerTest {
 
         auth(Role.USER);
         Response<ClassroomDto> response =  new Response<>();
-        response.setDto(ClassroomMapper.mapToClassroomDto(classroom));
+        response.setDtoT(ClassroomMapper.mapToClassroomDto(classroom));
         Mockito.when(classroomService.saveClassroom(Mockito.any(ClassroomDto.class))).thenReturn(response);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/classroom")
@@ -263,7 +257,7 @@ public class ClassroomControllerTest {
 
         auth(Role.ADMIN);
         Response<ClassroomDto> response =  new Response<>();
-        response.setDto(ClassroomMapper.mapToClassroomDto(classroom));
+        response.setDtoT(ClassroomMapper.mapToClassroomDto(classroom));
         Mockito.when(classroomService.deleteClassroom(classroom.getId())).thenReturn(response);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/api/classroom/" + classroom.getId())
@@ -276,7 +270,7 @@ public class ClassroomControllerTest {
         Response<ClassroomDto> responseClassroom = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<Response<ClassroomDto>>() {
         });
 
-        check(responseClassroom.getDto(),classroom);
+        check(responseClassroom.getDtoT(),classroom);
 
 
     }
@@ -302,7 +296,7 @@ public class ClassroomControllerTest {
 
         auth(Role.USER);
         Response<ClassroomDto> response =  new Response<>();
-        response.setDto(ClassroomMapper.mapToClassroomDto(classroom));
+        response.setDtoT(ClassroomMapper.mapToClassroomDto(classroom));
         Mockito.when(classroomService.deleteClassroom(classroom.getId())).thenReturn(response);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/classroom/" + classroom.getId())
@@ -322,7 +316,7 @@ public class ClassroomControllerTest {
         auth(Role.USER);
         Response<List<ClassroomDto>> response = new Response<>();
         List<ClassroomDto> list = List.of(classroom,classroom1).stream().map(ClassroomMapper::mapToClassroomDto).toList();
-        response.setDto(list);
+        response.setDtoT(list);
         Mockito.when(classroomService.getAllClassrooms()).thenReturn(response);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/classroom/all")
@@ -334,8 +328,8 @@ public class ClassroomControllerTest {
         Response<List<ClassroomDto>> responseClassroom = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<Response<List<ClassroomDto>>>() {
         });
 
-        check(responseClassroom.getDto().get(0), classroom);
-        check(responseClassroom.getDto().get(1), classroom1);
+        check(responseClassroom.getDtoT().get(0), classroom);
+        check(responseClassroom.getDtoT().get(1), classroom1);
 
 
     }
@@ -361,7 +355,7 @@ public class ClassroomControllerTest {
         auth(Role.ADMIN);
         classroom1.setId(classroom.getId());
         Response<ClassroomDto> response =  new Response<>();
-        response.setDto(ClassroomMapper.mapToClassroomDto(classroom1));
+        response.setDtoT(ClassroomMapper.mapToClassroomDto(classroom1));
         Mockito.when(classroomService.updateClassroom(Mockito.any(ClassroomDto.class))).thenReturn(response);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.patch("/api/classroom")
@@ -373,7 +367,7 @@ public class ClassroomControllerTest {
 
         Response<ClassroomDto> responseClassroom = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<Response<ClassroomDto>>(){
         });
-        check(responseClassroom.getDto(),classroom1);
+        check(responseClassroom.getDtoT(),classroom1);
 
 
 
@@ -400,7 +394,7 @@ public class ClassroomControllerTest {
 
         auth(Role.USER);
         Response<ClassroomDto> response =  new Response<>();
-        response.setDto(ClassroomMapper.mapToClassroomDto(classroom));
+        response.setDtoT(ClassroomMapper.mapToClassroomDto(classroom));
         Mockito.when(classroomService.updateClassroom(Mockito.any(ClassroomDto.class))).thenReturn(response);
 
         mockMvc.perform(MockMvcRequestBuilders.patch("/api/classroom")
