@@ -18,6 +18,7 @@ jobs:
             distribution: 'temurin'
 
         - name: Maven clean and build
+          working-directory: "./backend"
           run: mvn clean package -DskipTests
 
         - name: 'Login via Azure CLI'
@@ -26,6 +27,7 @@ jobs:
             creds: ${{ secrets.AZURE_CREDENTIALS }}
         
         - name: 'Build and push docker image'
+          working-directory: "./backend"
           uses: azure/docker-login@v1
           with:
             login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
