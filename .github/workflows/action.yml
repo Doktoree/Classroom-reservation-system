@@ -40,3 +40,4 @@ jobs:
             registry-password: ${{ secrets.REGISTRY_PASSWORD }}
             name: classroomreservationcontrainer
             location: 'italynorth'
+            
