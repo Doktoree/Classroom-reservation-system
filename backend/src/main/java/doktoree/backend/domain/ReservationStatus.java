@@ -47,7 +47,7 @@ public class ReservationStatus {
 						&& (rejectingReason == null
 						|| rejectingReason.trim().isEmpty())) {
             throw new IllegalArgumentException(
-						"Rejection reason must be provided when the status is REJECTED"
+						"Rejecting reason must be provided!"
 						);
         } else if (this.status != Status.REJECTED
 						&& rejectingReason != null
