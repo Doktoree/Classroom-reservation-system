@@ -28,11 +28,12 @@ export async function login(user) {
     body: JSON.stringify(user),
   });
 
+  const data = await response.json();
+
   if (!response.ok) {
-    throw new Error(response.message);
+    throw new Error(data.message);
   }
 
-  const data = await response.json();
 
   return data;
 }
