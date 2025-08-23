@@ -2,7 +2,9 @@ import { useState } from 'react'
 import './App.css'
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import LoginForm from './components/login/LoginForm'
-import ReservationForm from './components/reservation/ReservationForm'
+import ReservationPage from './components/reservation/ReservationPage'
+import UserPage from './components/user/UserPage'
+import Navbar from './components/navbar/NavbarUser'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -14,7 +16,9 @@ function App() {
         <Routes>
 
           <Route path='/' element={<LoginForm/>}></Route>
-          <Route path='/reservation' element={<ReservationForm/>}></Route>
+          <Route path='/user' element={<UserPage/>}></Route>
+          <Route path='/navbar' element={<Navbar/>}></Route>
+          <Route path='/reservation' element={<ReservationPage/>}></Route>
         </Routes>
 
       </Router>

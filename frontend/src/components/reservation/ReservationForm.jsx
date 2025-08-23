@@ -7,9 +7,9 @@ import {
   getAllAvailableClassrooms,
   saveReservation,
 } from "../../services/reservationService";
-import './ReservationForm.css';
+import "./ReservationForm.css";
 
-function ReservationForm() {
+function ReservationForm({ initialData, onlyview = true }) {
   const reservationTypes = [
     "EXAM",
     "COLLOQUIUM",
@@ -32,8 +32,7 @@ function ReservationForm() {
   const [selectedCouncilType, setSelectedCouncilType] = useState(null);
   const [shortDescription, setShortDescription] = useState(null);
   const [studentOrganizations, setStudentOrganizations] = useState([]);
-  const [selectedStudentOrganization, setSelectedStudentOrganization] =
-    useState(null);
+  const [selectedStudentOrganization, setSelectedStudentOrganization] = useState(null);
   const [otherWorkshopName, setOtherWorkshopName] = useState(null);
   const [participants, setParticipants] = useState([
     { firstName: "", lastName: "" },
@@ -41,6 +40,17 @@ function ReservationForm() {
   const [selectedClassrooms, setSelectedClassrooms] = useState([]);
   const [classrooms, setClassrooms] = useState([]);
   const [showClassrooms, setShowClassrooms] = useState(false);
+  const [headerText, setHeaderText] = useState("Pick classrooms for reservation:");
+  const [headerSubjectName, setHeaderSubjectName] = useState("Please enter subject name:");
+  const [headerReservationType, setReservationType] = useState("Please select type of reservation:");
+  const [headerDate, setHeaderDate] = useState("Please select date of your reservation:");
+  const [headerStartTime, setHeaderStartTime] = useState("Please enter start time of your reservation:");
+  const [headerEndTime, setHeaderEndTime] = useState("Please enter end time of your reservation:");
+  const [headerDepartment, setHeaderDepartment] = useState("Please pick department:");
+  const [headerCouncil, setHeaderCouncil] = useState("Please pick council type:");
+  const [headerOtherMeeting, setHeaderOtherMeeting] = useState("Please enter short description:");
+  const [headerStudentOrganization, setHeaderStudentOrganization] = useState("Please pick student organization:");
+  const [headerOtherWorkshop, setHeaderOtherWorkshop] = useState("Enter workshop name:");
 
   useEffect(() => {
     async function fetchData() {
@@ -53,16 +63,46 @@ function ReservationForm() {
     fetchData();
   }, []);
 
-
-
-  const fetchAvailableClassrooms = async () => {
-
-    if(selectedStartingTime > selectedEndingTime){
-
-        alert("Start time must be before end time!");
-        return;
+  useEffect(() => {
+    if (initialData) {
+      console.log("Ima ga!");
+      setSelectedOption(initialData.reservationPurpose);
+      setSelectedDate(initialData.date);
+      setSelectedStartingTime(initialData.startTime);
+      setSelectedEndingTime(initialData.endTime);
+      setClassrooms(initialData.classrooms);
+      setSubjectName(initialData.subjectName);
+      setSelectedCouncilType(initialData.councilType);
+      setShortDescription(initialData.shortDescription);
+      setOtherWorkshopName(initialData.name);
+      setSelectedDepartment(initialData.department);
+      setSelectedStudentOrganization(initialData.studentOrganization);
+      setParticipants(initialData.workshopParticipants);
+      setShowClassrooms(true);
+      setHeaderText("Classrooms reserved:");
+      setHeaderSubjectName("Subject name:");
+      setReservationType("Reservation type:");
+      setHeaderDate("Date of reservation:")
+      setHeaderStartTime("Start time of reservation:");
+      setHeaderEndTime("End time of reservation:");
+      setHeaderDepartment("Department:");
+      setHeaderCouncil("Council:");
+      setHeaderOtherMeeting("Short description:");
+      setHeaderStudentOrganization("Student organization:");
+      setOtherWorkshopName("Workshop name:");
     }
 
+    console.log("Nema ga!");
+  }, [initialData]);
+
+  const fetchAvailableClassrooms = async (e) => {
+
+    e.preventDefault();
+
+    if (selectedStartingTime > selectedEndingTime) {
+      alert("Start time must be before end time!");
+      return;
+    }
 
     if (selectedDate && selectedStartingTime && selectedEndingTime) {
       const reservation = {
@@ -83,8 +123,7 @@ function ReservationForm() {
     }
   };
 
-  function cleanForm () {
-
+  function cleanForm() {
     setSelectedOption(null);
     setSelectedDate(null);
     setSelectedStartingTime("");
@@ -99,7 +138,6 @@ function ReservationForm() {
     setSelectedStudentOrganization(null);
     setParticipants([]);
     setShowClassrooms(false);
-
   }
 
   const handleParticipantChange = (index, field, value) => {
@@ -130,14 +168,18 @@ function ReservationForm() {
     return time + ":00";
   }
 
-  const createReservation = async () => {
+  const createReservation = async (e) => {
 
-
-
+    e.preventDefault();
     const formattedDate = formatDate(selectedDate);
     const formattedStartTime = formatTime(selectedStartingTime);
     const formattedEndTime = formatTime(selectedEndingTime);
     const formatedClassrooms = selectedClassrooms.map((id) => ({ id }));
+    const formatedDepartments = {id: selectedDepartment};
+    const formatedStudentOrganization = {id: selectedStudentOrganization}
+    const formatedWorkshopParticipants = participants;
+    
+
     const reservation = {
       reservationPurpose: selectedOption,
       date: formattedDate,
@@ -149,10 +191,12 @@ function ReservationForm() {
       councilType: selectedCouncilType,
       shortDescription: shortDescription,
       name: otherWorkshopName,
-      department: selectedDepartment,
-      studentOrganization: selectedStudentOrganization,
-      workshopParticipants: participants,
+      department: formatedDepartments,
+      studentOrganization: formatedStudentOrganization,
+      workshopParticipants: formatedWorkshopParticipants,
     };
+
+    console.log(JSON.stringify(reservation));
 
     const data = await saveReservation(reservation);
     alert(data.message);
@@ -168,204 +212,224 @@ function ReservationForm() {
   };
 
   return (
-  <form className="reservation-form">
-    <label>Please select type of reservation:</label>
-    <select
-      className="reservation-select"
-      value={selectedOption}
-      onChange={(e) => setSelectedOption(e.target.value)}
-    >
-      {reservationTypes.map((opt, index) => (
-        <option key={index} value={opt}>
-          {opt}
-        </option>
-      ))}
-    </select>
+    <form className="reservation-form">
+      <label>{headerReservationType}</label>
+      <select
+        className="reservation-select"
+        value={selectedOption}
+        onChange={(e) => setSelectedOption(e.target.value)}
+        disabled={onlyview}
+      >
+        {reservationTypes.map((opt, index) => (
+          <option key={index} value={opt}>
+            {opt}
+          </option>
+        ))}
+      </select>
 
-    <label>Please select date of your reservation:</label>
-    <DatePicker
-      className="reservation-input"
-      selected={selectedDate}
-      onChange={(date) => setSelectedDate(date)}
-      dateFormat="dd/MM/yyyy"
-      placeholderText="--Date--"
-      required
-    />
+      <label>{headerDate}</label>
+      <DatePicker
+        className="reservation-input"
+        selected={selectedDate}
+        onChange={(date) => setSelectedDate(date)}
+        dateFormat="dd/MM/yyyy"
+        placeholderText="--Date--"
+        disabled={onlyview}
+        required
+      />
 
-    <label>Please enter starting time of your reservation:</label>
-    <input
-      className="reservation-input"
-      type="time"
-      onChange={(e) => setSelectedStartingTime(e.target.value)}
-      value={selectedStartingTime}
-      required
-    />
+      <label>{headerStartTime}</label>
+      <input
+        className="reservation-input"
+        type="time"
+        onChange={(e) => setSelectedStartingTime(e.target.value)}
+        value={selectedStartingTime}
+        readOnly={onlyview}
+        required
+      />
 
-    <label>Please enter ending time of your reservation:</label>
-    <input
-      className="reservation-input"
-      type="time"
-      onChange={(e) => setSelectedEndingTime(e.target.value)}
-      value={selectedEndingTime}
-      required
-    />
+      <label>{headerEndTime}</label>
+      <input
+        className="reservation-input"
+        type="time"
+        onChange={(e) => setSelectedEndingTime(e.target.value)}
+        value={selectedEndingTime}
+        readOnly={onlyview}
+        required
+      />
 
-    <button className="reservation-button" onClick={fetchAvailableClassrooms}>
-      Check available classrooms
-    </button>
+      {!onlyview && (
+        <button
+          className="reservation-button"
+          onClick={fetchAvailableClassrooms}
+          readOnly
+        >
+          Check available classrooms
+        </button>
+      )}
 
-    {showClassrooms && (
-      <>
-        <h3>Pick classrooms for reservation:</h3>
-        <div className="classroom-list">
-          {classrooms.map((classroom) => (
-            <label key={classroom.id}>
-              <input
-                type="checkbox"
-                value={classroom.id}
-                checked={selectedClassrooms.includes(classroom.id)}
-                onChange={(e) => handleCheckboxChange(parseInt(e.target.value))}
-              />
-              {classroom.classRoomNumber}
-            </label>
-          ))}
+      {showClassrooms && (
+        <>
+          <h3>{headerText}</h3>
+          <div className="classroom-list">
+            {classrooms.map((classroom) => (
+              <label key={classroom.id}>
+                <input
+                  type="checkbox"
+                  value={classroom.id}
+                  checked={selectedClassrooms.includes(classroom.id)}
+                  onChange={(e) =>
+                    handleCheckboxChange(parseInt(e.target.value))
+                  }
+                />
+                {classroom.classRoomNumber}
+              </label>
+            ))}
+          </div>
+        </>
+      )}
+
+      {(selectedOption === "EXAM" ||
+        selectedOption === "COURSE" ||
+        selectedOption === "COLLOQUIUM") && (
+        <div>
+          <label>{headerSubjectName}</label>
+          <input
+            className="reservation-input"
+            value={subjectName}
+            onChange={(e) => setSubjectName(e.target.value)}
+            required
+            readOnly={onlyview}
+          />
         </div>
-      </>
-    )}
+      )}
 
-    {(selectedOption === "EXAM" ||
-      selectedOption === "COURSE" ||
-      selectedOption === "COLLOQUIUM") && (
-      <div>
-        <label>Please enter subject name:</label>
-        <input
-          className="reservation-input"
-          value={subjectName}
-          onChange={(e) => setSubjectName(e.target.value)}
-          required
-        />
-      </div>
-    )}
-
-    {selectedOption === "DEPARTMENT_MEETING" && (
-      <div>
-        <label>Please pick department:</label>
-        <select
-          className="reservation-select"
-          value={selectedDepartment}
-          onChange={(e) => setSelectedDepartment(e.target.value)}
-          required
-        >
-          {departments.map((dep, index) => (
-            <option key={index} value={dep.id}>
-              {dep.name}
-            </option>
-          ))}
-        </select>
-      </div>
-    )}
-
-    {selectedOption === "COUNCIL" && (
-      <div>
-        <label>Please pick council type:</label>
-        <select
-          className="reservation-select"
-          value={selectedCouncilType}
-          onChange={(e) => setSelectedCouncilType(e.target.value)}
-          required
-        >
-          {councilTypes.map((cou, index) => (
-            <option key={index} value={cou}>
-              {cou}
-            </option>
-          ))}
-        </select>
-      </div>
-    )}
-
-    {selectedOption === "OTHER_MEETING" && (
-      <div>
-        <label>Please enter short description:</label>
-        <textarea
-          className="reservation-textarea"
-          id="shortDescription"
-          name="shortDescription"
-          rows="4"
-          cols="50"
-          onChange={(e) => setShortDescription(e.target.value)}
-          required
-        ></textarea>
-      </div>
-    )}
-
-    {selectedOption === "STUDENT_ORGANIZATION" && (
-      <div>
-        <label>Please pick student organization:</label>
-        <select
-          className="reservation-select"
-          value={selectedStudentOrganization}
-          onChange={(e) => setSelectedStudentOrganization(e.target.value)}
-          required
-        >
-          <option value="">--Select Organization--</option>
-          {studentOrganizations.map((so, index) => (
-            <option key={index} value={so.id}>
-              {so.name}
-            </option>
-          ))}
-        </select>
-      </div>
-    )}
-
-    {selectedOption === "OTHER_WORKSHOP" && (
-      <div>
-        <label>Please enter workshop name:</label>
-        <input
-          className="reservation-input"
-          value={otherWorkshopName}
-          onChange={(e) => setOtherWorkshopName(e.target.value)}
-          required
-        />
-        <div className="participants">
-          <label>Participants:</label>
-          {participants.map((participant, index) => (
-            <div className="participant-row" key={index}>
-              <input
-                type="text"
-                placeholder="First Name"
-                value={participant.firstName}
-                className="reservation-input"
-                onChange={(e) =>
-                  handleParticipantChange(index, "firstName", e.target.value)
-                }
-              />
-              <input
-                type="text"
-                placeholder="Last Name"
-                value={participant.lastName}
-                className="reservation-input"
-                onChange={(e) =>
-                  handleParticipantChange(index, "lastName", e.target.value)
-                }
-              />
-              <button type="button" onClick={() => removeParticipant(index)}>
-                Remove
-              </button>
-            </div>
-          ))}
-          <button type="button" onClick={addParticipant}>
-            Add Participant
-          </button>
+      {selectedOption === "DEPARTMENT_MEETING" && (
+        <div>
+          <label>{headerDepartment}</label>
+          <select
+            className="reservation-select"
+            value={selectedDepartment}
+            onChange={(e) => setSelectedDepartment(parseInt(e.target.value))}
+            required
+            readOnly={onlyview}
+          >
+            {departments.map((dep, index) => (
+              <option key={index} value={dep.id}>
+                {dep.name}
+              </option>
+            ))}
+          </select>
         </div>
-      </div>
-    )}
-    <br />
-    <button className="reservation-button" onClick={createReservation}>
-      Create reservation
-    </button>
-  </form>
-);
+      )}
 
+      {selectedOption === "COUNCIL" && (
+        <div>
+          <label>{headerCouncil}</label>
+          <select
+            className="reservation-select"
+            value={selectedCouncilType}
+            onChange={(e) => setSelectedCouncilType(e.target.value)}
+            required
+            disabled={onlyview}
+          >
+            {councilTypes.map((cou, index) => (
+              <option key={index} value={cou}>
+                {cou}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {selectedOption === "OTHER_MEETING" && (
+        <div>
+          <label>{headerOtherMeeting}</label>
+          <textarea
+            className="reservation-textarea"
+            id="shortDescription"
+            name="shortDescription"
+            rows="4"
+            cols="50"
+            onChange={(e) => setShortDescription(e.target.value)}
+            required
+            value={shortDescription}
+            readOnly={onlyview}
+          ></textarea>
+        </div>
+      )}
+
+      {selectedOption === "STUDENT_ORGANIZATION" && (
+        <div>
+          <label>{headerStudentOrganization}</label>
+          <select
+            className="reservation-select"
+            value={selectedStudentOrganization.name}
+            onChange={(e) => setSelectedStudentOrganization(e.target.value)}
+            required
+            disabled={onlyview}
+          >
+            
+            {studentOrganizations.map((so, index) => (
+              <option key={index} value={so.id}>
+                {so.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {selectedOption === "OTHER_WORKSHOP" && (
+        <div>
+          <label>{headerOtherWorkshop}</label>
+          <input
+            className="reservation-input"
+            value={otherWorkshopName}
+            onChange={(e) => setOtherWorkshopName(e.target.value)}
+            required
+            readOnly={onlyview}
+          />
+          <div className="participants">
+            <label>Participants:</label>
+            {participants.map((participant, index) => (
+              <div className="participant-row" key={index}>
+                <input
+                  type="text"
+                  placeholder="First Name"
+                  value={participant.firstName}
+                  className="reservation-input"
+                  onChange={(e) =>
+                    handleParticipantChange(index, "firstName", e.target.value)
+                  }
+                />
+                <input
+                  type="text"
+                  placeholder="Last Name"
+                  value={participant.lastName}
+                  className="reservation-input"
+                  onChange={(e) =>
+                    handleParticipantChange(index, "lastName", e.target.value)
+                  }
+                />
+                <button type="button" onClick={() => removeParticipant(index)}>
+                  Remove
+                </button>
+              </div>
+            ))}
+            <button type="button" onClick={addParticipant}>
+              Add Participant
+            </button>
+          </div>
+        </div>
+      )}
+      <br />
+      {!onlyview && (
+        <button className="reservation-button" type="button" onClick={createReservation}>
+          Create reservation
+        </button>
+      )}
+    </form>
+  );
 }
 
 export default ReservationForm;

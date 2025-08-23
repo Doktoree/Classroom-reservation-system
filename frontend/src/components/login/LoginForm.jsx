@@ -14,14 +14,13 @@ function LoginForm() {
       password: password,
     };
 
-    console.log(JSON.stringify(user));
 
     try {
       const data = await login(user);
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
       alert("Login succesful!");
-      navigate("/reservation");
+      navigate("/navbar");
     } catch (err) {
       alert(err);
     }
