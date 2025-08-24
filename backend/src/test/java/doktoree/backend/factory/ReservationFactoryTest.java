@@ -104,7 +104,7 @@ public class ReservationFactoryTest {
     @Test
     public void whenCreateReservation_thenReturnDepartmentReservation(){
 
-        dto.setReservationPurpose("DEPARTMENT");
+        dto.setReservationPurpose("DEPARTMENT_MEETING");
         Department department = new Department();
         department.setId(2L);
         department.setName("Department");
@@ -134,7 +134,7 @@ public class ReservationFactoryTest {
     @Test
     public void whenCreateReservation_thenReturnOtherMeetingReservation(){
 
-        dto.setReservationPurpose("OTHER");
+        dto.setReservationPurpose("OTHER_MEETING");
         dto.setShortDescription("Short 1");
 
         Reservation reservation = ReservationFactory.createReservation(dto);

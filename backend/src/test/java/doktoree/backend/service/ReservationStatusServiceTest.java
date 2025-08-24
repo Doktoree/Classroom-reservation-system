@@ -1,5 +1,6 @@
 package doktoree.backend.service;
 
+import doktoree.backend.domain.ExamReservation;
 import doktoree.backend.domain.Reservation;
 import doktoree.backend.domain.ReservationStatus;
 import doktoree.backend.domain.User;
@@ -15,6 +16,7 @@ import doktoree.backend.repositories.ReservationRepository;
 import doktoree.backend.repositories.ReservationStatusRepository;
 import doktoree.backend.repositories.UserRepository;
 import doktoree.backend.services.ReservationNotificationServiceImpl;
+import doktoree.backend.services.ReservationStatusService;
 import doktoree.backend.services.ReservationStatusServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,6 +30,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -72,7 +77,7 @@ public class ReservationStatusServiceTest {
         user = new User();
         user.setId(55L);
 
-        reservation = new Reservation();
+        reservation = new ExamReservation();
         reservation.setId(1L);
         reservation.setUser(user);
 
@@ -103,7 +108,7 @@ public class ReservationStatusServiceTest {
         assertThat(dto.getId()).isEqualTo(reservation.getId());
         assertThat(dto.getRejectingReason()).isEqualTo(reservation.getRejectingReason());
         assertThat(dto.getStatus()).isEqualTo(reservation.getStatus());
-        assertThat(dto.getReservation().getId()).isEqualTo(reservation.getReservation().getId());
+        assertThat(dto.getReservationDto().getId()).isEqualTo(reservation.getReservation().getId());
     }
 
     @DisplayName("Find reservation status by valid ID - should return expected DTO")
@@ -384,6 +389,74 @@ public class ReservationStatusServiceTest {
 
         }).isInstanceOf(EntityNotSavedException.class)
                 .hasMessageContaining("Reservation status can not be saved!");
+
+    }
+
+    @DisplayName("Get all reservation statuses - should return expected DTO")
+    @Test
+    public void whenGetAllReservationStatus_thenReturnsExpectedDto(){
+
+        ReservationStatus res = reservationStatus;
+        Page<ReservationStatus> page = new PageImpl<>(List.of(reservationStatus,res));
+        List<ReservationStatus> reservationStatusList = page.getContent();
+        Mockito.when(reservationStatusRepository.findAll(Mockito.any(PageRequest.class))).thenReturn(page);
+
+        Response<List<ReservationStatusDto>> response = reservationStatusService.getAllReservationStatus(1);
+        check(response.getDtoT().get(0), reservationStatus);
+        check(response.getDtoT().get(1), res);
+
+
+    }
+
+    @DisplayName("Get all reservation statuses - should throw EmptyEntityListException")
+    @Test
+    public void whenGetAllReservationStatus_thenThrowsException(){
+
+        Page<ReservationStatus> page = new PageImpl<>(new ArrayList<>());
+        List<ReservationStatus> reservationStatusList = page.getContent();
+        Mockito.when(reservationStatusRepository.findAll(Mockito.any(PageRequest.class))).thenReturn(page);
+
+        assertThatThrownBy(() -> {
+
+            reservationStatusService.getAllReservationStatus(1);
+
+        }).isInstanceOf(EmptyEntityListException.class)
+            .hasMessageContaining("There are no reservation statuses!");
+
+    }
+
+    @DisplayName("Get all reservation statuses by status - should return expected DTO")
+    @Test
+    public void whenGetAllReservationStatusByStatus_thenReturnsExpectedDto(){
+
+        ReservationStatus res = reservationStatus;
+        Page<ReservationStatus> page = new PageImpl<>(List.of(reservationStatus,res));
+        List<ReservationStatus> reservationStatusList = page.getContent();
+        Mockito.when(reservationStatusRepository.findByStatusOrderByIdDesc(Mockito.any(Status.class),Mockito.any(PageRequest.class))).thenReturn(page);
+        ReservationStatusDto rsdto = new ReservationStatusDto();
+        rsdto.setStatus(Status.REJECTED);
+        Response<List<ReservationStatusDto>> response = reservationStatusService.getAllReservationStatusByStatus(1,rsdto);
+        check(response.getDtoT().get(0), reservationStatus);
+        check(response.getDtoT().get(1), res);
+
+
+    }
+
+    @DisplayName("Get all reservation statuses by status - should throw EmptyEntityListException")
+    @Test
+    public void whenGetAllReservationStatusByStatus_thenThrowsException(){
+
+        Page<ReservationStatus> page = new PageImpl<>(new ArrayList<>());
+        List<ReservationStatus> reservationStatusList = page.getContent();
+        Mockito.when(reservationStatusRepository.findByStatusOrderByIdDesc(Mockito.any(Status.class),Mockito.any(PageRequest.class))).thenReturn(page);
+        ReservationStatusDto rsdto = new ReservationStatusDto();
+        rsdto.setStatus(Status.REJECTED);
+        assertThatThrownBy(() -> {
+
+            reservationStatusService.getAllReservationStatusByStatus(1,rsdto);
+
+        }).isInstanceOf(EmptyEntityListException.class)
+            .hasMessageContaining("There are no reservation statuses!");
 
     }
 

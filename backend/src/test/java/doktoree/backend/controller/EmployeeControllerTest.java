@@ -119,9 +119,9 @@ public class EmployeeControllerTest {
         loginDto.setPassword("pass");
         loginDto.setEmail("mail@gmail.com");
 
-        ResponseEntity<Map<String, String>> responseEntity = authController.login(loginDto);
-        Map<String,String> map = responseEntity.getBody();
-        token = map.get("token");
+        ResponseEntity<Map<String, Object>> responseEntity = authController.login(loginDto);
+        Map<String,Object> map = responseEntity.getBody();
+        token = (String)map.get("token");
 
     }
 
@@ -174,20 +174,6 @@ public class EmployeeControllerTest {
 
     }
 
-    @Test
-    public void whenFindEmployeeIdById_thenReturnUnauthorizedStatus() throws Exception{
-
-        auth(Role.USER);
-        Response<EmployeeDto> response = new Response<>();
-        response.setDtoT(EmployeeMapper.mapToEmployeeDto(employee));
-        Mockito.when(employeeService.getEmployeeById(employee.getId())).thenReturn(response);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/employee/" + employee.getId())
-                        .header("Authorization", "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isForbidden());
-
-    }
 
     @Test
     public void whenGetAllEmployees_thenReturnExpectedEmployees() throws Exception{

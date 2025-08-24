@@ -194,9 +194,9 @@ public class ReservationControllerTest {
         loginDto.setEmail("mail@gmail.com");
         loginDto.setPassword("pass");
 
-        ResponseEntity<Map<String,String>> response = authController.login(loginDto);
-        Map<String,String> map = response.getBody();
-        token = map.get("token");
+        ResponseEntity<Map<String,Object>> response = authController.login(loginDto);
+        Map<String,Object> map = response.getBody();
+        token = (String)map.get("token");
 
     }
 

@@ -79,7 +79,7 @@ public class ClassroomControllerTest {
 
     private Classroom classroom, classroom1;
 
-    private String token;
+    private Object token;
 
     private User user;
 
@@ -143,8 +143,8 @@ public class ClassroomControllerTest {
         loginDto.setEmail("mail@gmail.com");
         loginDto.setPassword("pass");
 
-        ResponseEntity< Map<String,String>> response = authController.login(loginDto);
-        Map<String,String> map = response.getBody();
+        ResponseEntity< Map<String,Object>> response = authController.login(loginDto);
+        Map<String,Object> map = response.getBody();
         token = map.get("token");
 
     }
@@ -202,7 +202,7 @@ public class ClassroomControllerTest {
         response.setDtoT(ClassroomMapper.mapToClassroomDto(classroom));
         Mockito.when(classroomService.saveClassroom(Mockito.any(ClassroomDto.class))).thenReturn(response);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/classroom")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/classroom/")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(classroom)))
@@ -224,7 +224,7 @@ public class ClassroomControllerTest {
         Mockito.when(classroomService.saveClassroom(Mockito.any(ClassroomDto.class))).thenThrow(new EntityNotSavedException("Classroom can not be saved!"));
 
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/classroom")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/classroom/")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(classroom)))
@@ -241,7 +241,7 @@ public class ClassroomControllerTest {
         response.setDtoT(ClassroomMapper.mapToClassroomDto(classroom));
         Mockito.when(classroomService.saveClassroom(Mockito.any(ClassroomDto.class))).thenReturn(response);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/classroom")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/classroom/")
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(classroom)))
@@ -358,7 +358,7 @@ public class ClassroomControllerTest {
         response.setDtoT(ClassroomMapper.mapToClassroomDto(classroom1));
         Mockito.when(classroomService.updateClassroom(Mockito.any(ClassroomDto.class))).thenReturn(response);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.patch("/api/classroom")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.patch("/api/classroom/")
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(classroom1)))
@@ -380,7 +380,7 @@ public class ClassroomControllerTest {
         Mockito.when(classroomService.updateClassroom(Mockito.any(ClassroomDto.class))).thenThrow(new EntityNotSavedException("Classroom can not be saved!"));
 
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/classroom")
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/classroom/")
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(classroom)))
@@ -397,7 +397,7 @@ public class ClassroomControllerTest {
         response.setDtoT(ClassroomMapper.mapToClassroomDto(classroom));
         Mockito.when(classroomService.updateClassroom(Mockito.any(ClassroomDto.class))).thenReturn(response);
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/classroom")
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/classroom/")
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(classroom)))

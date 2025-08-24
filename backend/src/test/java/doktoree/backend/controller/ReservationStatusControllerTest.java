@@ -194,16 +194,16 @@ public class ReservationStatusControllerTest {
         loginDto.setEmail("mail@gmail.com");
         loginDto.setPassword("pass");
 
-        ResponseEntity<Map<String,String>> response = authController.login(loginDto);
-        Map<String,String> map = response.getBody();
-        token = map.get("token");
+        ResponseEntity<Map<String,Object>> response = authController.login(loginDto);
+        Map<String,Object> map = response.getBody();
+        token = (String)map.get("token");
 
     }
 
     public void check(ReservationStatusDto dto, ReservationStatus reservationStatus){
 
         Assertions.assertThat(dto.getId()).isEqualTo(reservationStatus.getId());
-        Assertions.assertThat(dto.getReservation().getId()).isEqualTo(reservationStatus.getReservation().getId());
+        Assertions.assertThat(dto.getReservationDto().getId()).isEqualTo(reservationStatus.getReservation().getId());
         Assertions.assertThat(dto.getStatus()).isEqualTo(reservationStatus.getStatus());
     }
 
@@ -291,7 +291,7 @@ public class ReservationStatusControllerTest {
         response.setDtoT(ReservationStatusMapper.mapToReservationStatusDto(reservationStatus));
         Mockito.when(reservationStatusService.saveReservationStatus(Mockito.any(ReservationStatusDto.class))).thenReturn(response);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/reservation-status")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/reservation-status/")
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(ReservationStatusMapper.mapToReservationStatusDto(reservationStatus))))
@@ -312,7 +312,7 @@ public class ReservationStatusControllerTest {
         auth(Role.ADMIN);
         Mockito.when(reservationStatusService.saveReservationStatus(Mockito.any(ReservationStatusDto.class))).thenThrow(new EntityNotSavedException("Reservation can not be saved!"));
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/reservation-status")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/reservation-status/")
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(ReservationStatusMapper.mapToReservationStatusDto(reservationStatus))))
@@ -330,7 +330,7 @@ public class ReservationStatusControllerTest {
         response.setDtoT(ReservationStatusMapper.mapToReservationStatusDto(reservationStatus));
         Mockito.when(reservationStatusService.saveReservationStatus(Mockito.any(ReservationStatusDto.class))).thenReturn(response);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/reservation-status")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/reservation-status/")
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(ReservationStatusMapper.mapToReservationStatusDto(reservationStatus))))
