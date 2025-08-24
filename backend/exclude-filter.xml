@@ -11,5 +11,11 @@
     <Match>
         <Bug pattern="REC_CATCH_EXCEPTION" />
     </Match>
+    <Match>
+        <Bug pattern="HE_EQUALS_USE_HASHCODE" />
+    </Match>
+    <Match>
+        <Bug pattern="HE_USE_OF_UNHASHABLE_CLASS" />
+    </Match>
 
 </FindBugsFilter>
