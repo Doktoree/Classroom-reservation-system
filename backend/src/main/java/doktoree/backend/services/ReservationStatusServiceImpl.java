@@ -7,6 +7,9 @@ import java.util.stream.Collectors;
 
 import doktoree.backend.exceptions.EmptyEntityListException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import doktoree.backend.domain.Reservation;
@@ -35,17 +38,19 @@ public class ReservationStatusServiceImpl implements ReservationStatusService {
 	private final UserRepository userRepository;
 	
 	private final ReservationNotificationServiceImpl reservationNotificationService;
-	
-	
+
+	private final MailService mailService;
 	
 	@Autowired
 	public ReservationStatusServiceImpl(ReservationStatusRepository reservationStatusRepository,
 			ReservationRepository reservationRepository, UserRepository userRepository,
-			ReservationNotificationServiceImpl reservationNotificationService) {
+			ReservationNotificationServiceImpl reservationNotificationService,
+			MailService mailService) {
 		this.reservationStatusRepository = reservationStatusRepository;
 		this.reservationRepository = reservationRepository;
 		this.userRepository = userRepository;
 		this.reservationNotificationService = reservationNotificationService;
+		this.mailService = mailService;
 	}
 
 	@Override
@@ -75,7 +80,7 @@ public class ReservationStatusServiceImpl implements ReservationStatusService {
 			throws EntityNotSavedException, EntityNotExistingException {
 		
 		Reservation reservation = reservationRepository
-				.findById(dto.getReservation().getId())
+				.findById(dto.getReservationDto().getId())
 				.orElseThrow(() -> new EntityNotExistingException(
 						"There is not reservation with given ID!"
 				));
@@ -140,11 +145,11 @@ public class ReservationStatusServiceImpl implements ReservationStatusService {
 			throws EntityNotExistingException, EntityNotSavedException {
 		
 		ReservationStatus rs = reservationStatusRepository
-				.findById(dto.getReservation().getId())
+				.findById(dto.getReservationDto().getId())
 				.orElseThrow(() -> new EntityNotExistingException(
 						"There is no reservation status with given ID!"
 				));
-
+		Status rsStatus = rs.getStatus();
 		rs.setStatus(Status.APPROVED);
 		rs.setRejectingReason(null);
 		Reservation reservation = reservationRepository
@@ -160,7 +165,7 @@ public class ReservationStatusServiceImpl implements ReservationStatusService {
 
 			ReservationNotification rn = new ReservationNotification(
 					null,
-					null,
+					"Reservation is approved",
 					reservation,
 					reservation.getUser());
 
@@ -168,6 +173,9 @@ public class ReservationStatusServiceImpl implements ReservationStatusService {
 					.mapToReservationNotificationDto(rn);
 			String message = reservationNotificationService
 					.saveReservationNotification(rnDto).getMessage();
+			if(rsStatus!=dto.getStatus()) {
+				mailService.sendEmailChangeClassrooms(rn);
+			}
 			Response<ReservationStatusDto> response = new Response<>();
 			response.setDtoT(reservationStatusDto);
 			response.setMessage(message);
@@ -184,11 +192,11 @@ public class ReservationStatusServiceImpl implements ReservationStatusService {
 	public Response<ReservationStatusDto> rejectReservation(ReservationStatusDto dto)
 			throws EntityNotExistingException, EntityNotSavedException {
 		ReservationStatus rs = reservationStatusRepository
-				.findById(dto.getReservation().getId())
+				.findById(dto.getReservationDto().getId())
 				.orElseThrow(() -> new EntityNotExistingException(
 						"There is no reservation status with given ID!"
 				));
-
+		Status rsStatus = rs.getStatus();
 		rs.setStatus(Status.REJECTED);
 		rs.setRejectingReason(dto.getRejectingReason());
 		Reservation reservation = reservationRepository
@@ -202,7 +210,7 @@ public class ReservationStatusServiceImpl implements ReservationStatusService {
 					.mapToReservationStatusDto(rs);
 			ReservationNotification rn = new ReservationNotification(
 					null,
-					null,
+					"Reservation is rejected",
 					reservation,
 					reservation.getUser());
 
@@ -211,6 +219,9 @@ public class ReservationStatusServiceImpl implements ReservationStatusService {
 			String message = reservationNotificationService
 					.saveReservationNotification(rnDto)
 					.getMessage();
+			if(rsStatus!=dto.getStatus()) {
+				mailService.sendEmailChangeClassrooms(rn);
+			}
 			Response<ReservationStatusDto> response = new Response<>();
 			response.setDtoT(reservationStatusDto);
 			response.setMessage(message);
@@ -220,6 +231,46 @@ public class ReservationStatusServiceImpl implements ReservationStatusService {
 					"Reservation status can not be saved!"
 			);
 		}
+	}
+
+	@Override
+	public Response<List<ReservationStatusDto>> getAllReservationStatus(int pageNumber) {
+
+		Page<ReservationStatus> page = reservationStatusRepository.findAll(PageRequest.of(pageNumber,10, Sort.by("id").descending()));
+		List<ReservationStatus> reservationStatuses = page.getContent();
+
+		if(reservationStatuses.isEmpty())
+			throw new EmptyEntityListException("There are no reservation statuses!");
+
+		List<ReservationStatusDto> dtos = reservationStatuses.stream()
+				.map(ReservationStatusMapper::mapToReservationStatusDto).toList();
+		Response<List<ReservationStatusDto>> response = new Response<>();
+		response.setDtoT(dtos);
+		response.setMessage("All reservation statuses are successfully found!");
+
+		return response;
+
+	}
+
+	@Override
+	public Response<List<ReservationStatusDto>> getAllReservationStatusByStatus(int pageNumber,
+			ReservationStatusDto reservationStatusDto) throws EmptyEntityListException {
+
+		Page<ReservationStatus> page = reservationStatusRepository
+				.findByStatusOrderByIdDesc(reservationStatusDto.getStatus(), PageRequest.of(pageNumber,10));
+		List<ReservationStatus> reservationStatuses = page.getContent();
+
+		if(reservationStatuses.isEmpty())
+			throw new EmptyEntityListException("There are no reservation statuses!");
+
+		List<ReservationStatusDto> dtos = reservationStatuses.stream()
+				.map(ReservationStatusMapper::mapToReservationStatusDto).toList();
+		Response<List<ReservationStatusDto>> response = new Response<>();
+		response.setDtoT(dtos);
+		response.setMessage("All reservation statuses are successfully found!");
+
+		return response;
+
 	}
 
 

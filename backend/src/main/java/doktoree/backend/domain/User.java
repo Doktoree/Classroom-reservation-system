@@ -40,8 +40,7 @@ public class User {
 	@JsonIgnore
 	@Enumerated(EnumType.STRING)
 	private Role role;
-	
-	@JsonIgnore
+
 	@ManyToOne
 	@JoinColumn(name = "employee_id", nullable = false)
 	private Employee employee;

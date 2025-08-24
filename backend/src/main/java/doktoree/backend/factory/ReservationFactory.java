@@ -39,7 +39,7 @@ public class ReservationFactory {
 			((CourseReservation) reservation).setSubjectName(dto.getSubjectName());
 			break;
 			
-		case "DEPARTMENT":
+		case "DEPARTMENT_MEETING":
 			reservation = new DepartmentMeetingReservation();
 			((DepartmentMeetingReservation) reservation)
 					.setDepartment(dto.getDepartment());
@@ -50,7 +50,7 @@ public class ReservationFactory {
 			((CouncilReservation) reservation).setCouncilType(dto.getCouncilType());
 			break;
 			
-		case "OTHER":
+		case "OTHER_MEETING":
 			reservation = new OtherMeetingReservation();
 			((OtherMeetingReservation) reservation)
 					.setShortDescription(dto.getShortDescription());

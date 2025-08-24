@@ -2,6 +2,7 @@ package doktoree.backend.mapper;
 
 import doktoree.backend.domain.ReservationStatus;
 import doktoree.backend.dtos.ReservationStatusDto;
+import doktoree.backend.factory.ReservationFactory;
 
 public class ReservationStatusMapper {
 
@@ -9,7 +10,7 @@ public class ReservationStatusMapper {
 		
 		return new ReservationStatus(
 				dto.getId(),
-				dto.getReservation(),
+				ReservationFactory.createReservation(dto.getReservationDto()),
 				dto.getStatus(),
 				dto.getRejectingReason()
 		);
@@ -21,7 +22,7 @@ public class ReservationStatusMapper {
 		
 		return new ReservationStatusDto(
 				reservationStatus.getId(),
-				reservationStatus.getReservation(),
+				ReservationMapper.mapToReservationDto(reservationStatus.getReservation()),
 				reservationStatus.getStatus(),
 				reservationStatus.getRejectingReason()
 		);

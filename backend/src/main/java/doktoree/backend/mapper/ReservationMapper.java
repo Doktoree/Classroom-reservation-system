@@ -38,7 +38,7 @@ public class ReservationMapper {
 			dto.setDepartment(
 					((DepartmentMeetingReservation) reservation).getDepartment()
 			);
-			dto.setReservationPurpose("DEPARTMENT");
+			dto.setReservationPurpose("DEPARTMENT_MEETING");
 		} else if (reservation instanceof CouncilReservation) {
 			dto.setCouncilType(((CouncilReservation) reservation).getCouncilType());
 			dto.setReservationPurpose("COUNCIL");
@@ -47,7 +47,7 @@ public class ReservationMapper {
 					((OtherMeetingReservation) reservation)
 							.getShortDescription()
 			);
-			dto.setReservationPurpose("OTHER");
+			dto.setReservationPurpose("OTHER_MEETING");
 		} else if (reservation instanceof StudentOrganizationReservation) {
 			dto.setStudentOrganization(
 					((StudentOrganizationReservation) reservation)

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import doktoree.backend.dtos.ClassroomDto;
 
 @RestController
-@RequestMapping("/api/classroom")
+@RequestMapping("/api/classroom/")
 @CrossOrigin(origins = "http://localhost:5173")
 public class ClassroomController {
 
@@ -55,7 +55,7 @@ public class ClassroomController {
 		
 	}
 	
-	@GetMapping("/all")
+	@GetMapping("all")
 	public ResponseEntity<Response<List<ClassroomDto>>> getAllClassrooms() {
 		
 		return ResponseEntity.ok(classroomService.getAllClassrooms());

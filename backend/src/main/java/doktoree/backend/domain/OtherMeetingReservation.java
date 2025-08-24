@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@DiscriminatorValue(value = "OTHER")
+@DiscriminatorValue(value = "OTHER_MEETING")
 @Getter
 @Setter
 @NoArgsConstructor

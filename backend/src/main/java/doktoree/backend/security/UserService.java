@@ -2,6 +2,7 @@ package doktoree.backend.security;
 
 import doktoree.backend.domain.Employee;
 import doktoree.backend.domain.User;
+import doktoree.backend.mapper.UserMapper;
 import doktoree.backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -56,23 +57,31 @@ public class UserService {
 
     }
 
-    public ResponseEntity<Map<String, String>> login(LoginDto loginDto) {
+    public ResponseEntity<Map<String, Object>> login(LoginDto loginDto) {
 
-        User user = userRepository
-                .findByEmail(loginDto.getEmail())
-                .orElseThrow(
-                    () -> new UsernameNotFoundException("There is no user with given email!")
-                );
+        Optional<User> optionalUser = userRepository
+                .findByEmail(loginDto.getEmail());
+
+        if(optionalUser.isEmpty()){
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Wrong password or email!");
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+
+        }
+
+        User user = optionalUser.get();
 
         if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
-            Map<String, String> wrongPasswordMap = new HashMap<>();
-            wrongPasswordMap.put("message", "Wrong password!");
+            Map<String, Object> wrongPasswordMap = new HashMap<>();
+            wrongPasswordMap.put("message", "Wrong password or email!");
             return new ResponseEntity<>(wrongPasswordMap, HttpStatus.UNAUTHORIZED);
         }
 
         String token = jwtUtil.generateToken(user);
-        Map<String, String> tokenMap = new HashMap<>();
+        Map<String, Object> tokenMap = new HashMap<>();
         tokenMap.put("token", token);
+        tokenMap.put("user", UserMapper.mapToUserDto(user));
         return new ResponseEntity<>(tokenMap, HttpStatus.OK);
 
     }

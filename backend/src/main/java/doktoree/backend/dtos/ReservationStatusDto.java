@@ -20,7 +20,7 @@ public class ReservationStatusDto {
 	private Long id;
 	
 	@NotNull(message = "Reservation can not be null!")
-	private Reservation reservation;
+	private ReservationDto reservationDto;
 	
 	@NotNull(message = "Status can not be null!")
 	private Status status;

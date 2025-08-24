@@ -170,6 +170,10 @@ public class ReservationServiceImpl implements ReservationService {
 			);
 		}
 
+		Reservation exOptionalReservation = optionalReservation.get();
+		exOptionalReservation.getClassrooms().size();
+
+
 		Set<Classroom> classrooms = dto.getClassrooms();
 
 		classrooms.forEach((c) -> {
@@ -196,7 +200,9 @@ public class ReservationServiceImpl implements ReservationService {
 					updatedReservation.getUser());
 			ReservationNotification savedRn = notificationRepository
 					.save(rn);
-			mailService.sendEmailChangeClassrooms(savedRn);
+			if(!classrooms.equals(exOptionalReservation.getClassrooms())) {
+				mailService.sendEmailChangeClassrooms(savedRn);
+			}
 			ReservationDto updatedReservationDto = ReservationMapper
 					.mapToReservationDto(updatedReservation);
 			Response<ReservationDto> response = new Response<>();

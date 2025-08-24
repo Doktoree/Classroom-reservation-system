@@ -29,7 +29,6 @@ public class EmployeeController {
 		this.employeeService = employeeService;
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("{id}")
 	public ResponseEntity<Response<EmployeeDto>> findEmployeeById(@PathVariable Long id) {
 		

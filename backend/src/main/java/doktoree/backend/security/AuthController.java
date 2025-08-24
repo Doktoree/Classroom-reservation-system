@@ -34,7 +34,7 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginDto loginDto) {
 
         return userService.login(loginDto);
 

@@ -1,5 +1,7 @@
 package doktoree.backend.services;
 
+import doktoree.backend.enums.Status;
+import doktoree.backend.exceptions.EmptyEntityListException;
 import java.util.List;
 
 import doktoree.backend.dtos.ReservationStatusDto;
@@ -23,4 +25,10 @@ public interface ReservationStatusService {
 	
 	public Response<ReservationStatusDto> rejectReservation(ReservationStatusDto dto)
 			throws EntityNotExistingException, EntityNotSavedException;
+
+	public Response<List<ReservationStatusDto>> getAllReservationStatus(int pageNumber)
+			throws EmptyEntityListException;
+
+	public Response<List<ReservationStatusDto>> getAllReservationStatusByStatus(int pageNumber, ReservationStatusDto reservationStatusDto)
+			throws EmptyEntityListException;
 }
