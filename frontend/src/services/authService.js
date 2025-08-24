@@ -47,11 +47,15 @@ export async function register(user) {
     body: JSON.stringify(user),
   });
 
+  const data = await response.text();
+
+  console.log("DAta: " + data);
+
   if (!response.ok) {
     throw new Error(response.message);
   }
 
-  const data = await response.json();
+  
 
   return data;
 }

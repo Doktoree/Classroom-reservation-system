@@ -21,7 +21,7 @@ function Navbar() {
       <div className="navbar-logo">Classroom reservation system</div>
       <ul className="navbar-links">
         <li>
-          <Link className="navbar-link" to="/user">User</Link>
+          <Link className="navbar-link" to="/user" state={{view:true}}>User</Link>
         </li>
         <li 
           className="navbar-link dropdown"

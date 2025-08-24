@@ -9,7 +9,7 @@ import {
 } from "../../services/reservationService";
 import "./ReservationForm.css";
 
-function ReservationForm({ initialData, onlyview = true }) {
+function ReservationForm({ initialData, onlyview = true, noWrapper = false, onChange }) {
   const reservationTypes = [
     "EXAM",
     "COLLOQUIUM",
@@ -65,12 +65,14 @@ function ReservationForm({ initialData, onlyview = true }) {
 
   useEffect(() => {
     if (initialData) {
-      console.log("Ima ga!");
+      console.log(JSON.stringify(initialData));
       setSelectedOption(initialData.reservationPurpose);
       setSelectedDate(initialData.date);
       setSelectedStartingTime(initialData.startTime);
       setSelectedEndingTime(initialData.endTime);
       setClassrooms(initialData.classrooms);
+      console.log("Classrooms: " + JSON.stringify(initialData.classrooms));
+      setSelectedClassrooms(initialData.classrooms.map(c => c.id));
       setSubjectName(initialData.subjectName);
       setSelectedCouncilType(initialData.councilType);
       setShortDescription(initialData.shortDescription);
@@ -92,8 +94,37 @@ function ReservationForm({ initialData, onlyview = true }) {
       setOtherWorkshopName("Workshop name:");
     }
 
-    console.log("Nema ga!");
+    
   }, [initialData]);
+
+  useEffect(() => {
+  if(onChange){
+    const newDate = new Date(selectedDate);
+    const reservationDto = {
+      id:initialData.id,
+      reservationPurpose: selectedOption,
+      date: formatDate(newDate),
+      startTime: formatTime(selectedStartingTime),
+      endTime: formatTime(selectedEndingTime),
+      user: initialData.user,
+      classrooms: selectedClassrooms.map(id => ({ id })),
+      subjectName: subjectName,
+      councilType: selectedCouncilType,
+      shortDescription: shortDescription,
+      name: otherWorkshopName,
+      department: selectedDepartment,
+      studentOrganization: selectedStudentOrganization,
+      workshopParticipants: participants,
+    };
+
+    onChange({
+      getCurrentData: () => reservationDto
+    });
+
+    console.log(reservationDto);
+  }
+}, [selectedOption,selectedDate,selectedStartingTime,selectedEndingTime,selectedClassrooms
+  ,subjectName,selectedCouncilType,shortDescription,otherWorkshopName,selectedDepartment,selectedStudentOrganization,participants]);
 
   const fetchAvailableClassrooms = async (e) => {
 
@@ -105,11 +136,25 @@ function ReservationForm({ initialData, onlyview = true }) {
     }
 
     if (selectedDate && selectedStartingTime && selectedEndingTime) {
-      const reservation = {
+
+      let reservation;
+
+      if(initialData){
+        reservation = {
+        date: selectedDate,
+        startTime:selectedStartingTime,
+        endTime: selectedEndingTime,
+      };
+
+      }
+      else{
+        reservation = {
         date: formatDate(selectedDate),
         startTime: formatTime(selectedStartingTime),
         endTime: formatTime(selectedEndingTime),
       };
+      }
+      
 
       try {
         const result = await getAllAvailableClassrooms(reservation);
@@ -164,9 +209,10 @@ function ReservationForm({ initialData, onlyview = true }) {
   }
 
   function formatTime(time) {
-    if (!time) return null;
-    return time + ":00";
-  }
+  if (!time) return null;
+  if (time.length === 5) return time + ":00";
+  return time;
+}
 
   const createReservation = async (e) => {
 
@@ -211,9 +257,9 @@ function ReservationForm({ initialData, onlyview = true }) {
     }
   };
 
-  return (
-    <form className="reservation-form">
-      <label>{headerReservationType}</label>
+  const content = (
+    <>
+    <label>{headerReservationType}</label>
       <select
         className="reservation-select"
         value={selectedOption}
@@ -423,13 +469,17 @@ function ReservationForm({ initialData, onlyview = true }) {
         </div>
       )}
       <br />
-      {!onlyview && (
+      {!onlyview && !noWrapper &&(
         <button className="reservation-button" type="button" onClick={createReservation}>
           Create reservation
         </button>
       )}
-    </form>
+
+    
+    </>
   );
+
+ return noWrapper ? content : <form className="reservation-form">{content}</form>;
 }
 
 export default ReservationForm;

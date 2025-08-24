@@ -20,7 +20,13 @@ function LoginForm() {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
       alert("Login succesful!");
-      navigate("/navbar");
+      const user2 = JSON.parse(localStorage.getItem("user"));
+      if(user2.role === "ADMIN")
+        navigate("/navbarAdmin");
+
+      else
+        navigate("/navbar");
+
     } catch (err) {
       alert(err);
     }
