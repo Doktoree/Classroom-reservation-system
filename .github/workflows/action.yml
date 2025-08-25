@@ -40,3 +40,4 @@ jobs:
             registry-password: ${{ secrets.REGISTRY_PASSWORD }}
             name: classroomreservationsystem
             location: 'italynorth'
+            ports: 8080
