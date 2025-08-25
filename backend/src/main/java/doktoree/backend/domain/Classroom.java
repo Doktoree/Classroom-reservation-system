@@ -41,8 +41,12 @@ public class Classroom {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 		Classroom that = (Classroom) o;
 		return id != null && id.equals(that.id);
 	}

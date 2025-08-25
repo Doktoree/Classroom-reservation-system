@@ -18,5 +18,5 @@
         <Bug pattern="HE_USE_OF_UNHASHABLE_CLASS" />
     </Match>
 
-    
+
 </FindBugsFilter>

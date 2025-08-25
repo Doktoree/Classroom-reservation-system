@@ -22,7 +22,8 @@ public class ReservationStatusMapper {
 		
 		return new ReservationStatusDto(
 				reservationStatus.getId(),
-				ReservationMapper.mapToReservationDto(reservationStatus.getReservation()),
+				ReservationMapper.mapToReservationDto(
+						reservationStatus.getReservation()),
 				reservationStatus.getStatus(),
 				reservationStatus.getRejectingReason()
 		);

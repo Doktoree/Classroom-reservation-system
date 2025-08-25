@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 public class DepartmentMapper {
 
 
-  public static Department mapToDepartment(DepartmentDto dto){
+  public static Department mapToDepartment(DepartmentDto dto) {
 
     return new Department(dto.getId(), dto.getShortName(), dto.getName(),
         dto.getEmployees().stream().map(EmployeeMapper::mapToEmployee)
@@ -15,10 +15,11 @@ public class DepartmentMapper {
 
   }
 
-  public static DepartmentDto mapToDepartmentDto(Department department){
+  public static DepartmentDto mapToDepartmentDto(Department department) {
 
     return new DepartmentDto(department.getId(), department.getShortName(),
-        department.getName(), department.getEmployees().stream().map(EmployeeMapper::mapToEmployeeDto)
+        department.getName(), department.getEmployees()
+        .stream().map(EmployeeMapper::mapToEmployeeDto)
         .collect(Collectors.toList()));
 
   }

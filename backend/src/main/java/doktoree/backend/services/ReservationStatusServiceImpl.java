@@ -173,7 +173,7 @@ public class ReservationStatusServiceImpl implements ReservationStatusService {
 					.mapToReservationNotificationDto(rn);
 			String message = reservationNotificationService
 					.saveReservationNotification(rnDto).getMessage();
-			if(rsStatus!=dto.getStatus()) {
+			if (rsStatus != dto.getStatus()) {
 				mailService.sendEmailChangeClassrooms(rn);
 			}
 			Response<ReservationStatusDto> response = new Response<>();
@@ -219,7 +219,7 @@ public class ReservationStatusServiceImpl implements ReservationStatusService {
 			String message = reservationNotificationService
 					.saveReservationNotification(rnDto)
 					.getMessage();
-			if(rsStatus!=dto.getStatus()) {
+			if (rsStatus != dto.getStatus()) {
 				mailService.sendEmailChangeClassrooms(rn);
 			}
 			Response<ReservationStatusDto> response = new Response<>();
@@ -236,11 +236,14 @@ public class ReservationStatusServiceImpl implements ReservationStatusService {
 	@Override
 	public Response<List<ReservationStatusDto>> getAllReservationStatus(int pageNumber) {
 
-		Page<ReservationStatus> page = reservationStatusRepository.findAll(PageRequest.of(pageNumber,10, Sort.by("id").descending()));
+		Page<ReservationStatus> page = reservationStatusRepository
+				.findAll(PageRequest.of(pageNumber,
+						10, Sort.by("id").descending()));
 		List<ReservationStatus> reservationStatuses = page.getContent();
 
-		if(reservationStatuses.isEmpty())
+		if (reservationStatuses.isEmpty()) {
 			throw new EmptyEntityListException("There are no reservation statuses!");
+		}
 
 		List<ReservationStatusDto> dtos = reservationStatuses.stream()
 				.map(ReservationStatusMapper::mapToReservationStatusDto).toList();
@@ -257,11 +260,13 @@ public class ReservationStatusServiceImpl implements ReservationStatusService {
 			ReservationStatusDto reservationStatusDto) throws EmptyEntityListException {
 
 		Page<ReservationStatus> page = reservationStatusRepository
-				.findByStatusOrderByIdDesc(reservationStatusDto.getStatus(), PageRequest.of(pageNumber,10));
+				.findByStatusOrderByIdDesc(reservationStatusDto.getStatus(),
+						PageRequest.of(pageNumber, 10));
 		List<ReservationStatus> reservationStatuses = page.getContent();
 
-		if(reservationStatuses.isEmpty())
+		if (reservationStatuses.isEmpty()) {
 			throw new EmptyEntityListException("There are no reservation statuses!");
+		}
 
 		List<ReservationStatusDto> dtos = reservationStatuses.stream()
 				.map(ReservationStatusMapper::mapToReservationStatusDto).toList();

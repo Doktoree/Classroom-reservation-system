@@ -29,6 +29,7 @@ public interface ReservationStatusService {
 	public Response<List<ReservationStatusDto>> getAllReservationStatus(int pageNumber)
 			throws EmptyEntityListException;
 
-	public Response<List<ReservationStatusDto>> getAllReservationStatusByStatus(int pageNumber, ReservationStatusDto reservationStatusDto)
+	public Response<List<ReservationStatusDto>> getAllReservationStatusByStatus(
+			int pageNumber, ReservationStatusDto reservationStatusDto)
 			throws EmptyEntityListException;
 }

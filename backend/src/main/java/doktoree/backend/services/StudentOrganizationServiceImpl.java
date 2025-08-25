@@ -17,12 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class StudentOrganizationServiceImpl implements StudentOrganizationService{
+public class StudentOrganizationServiceImpl implements StudentOrganizationService {
 
   public final StudentOrganizationRepository repository;
 
   @Autowired
-  public StudentOrganizationServiceImpl(StudentOrganizationRepository repository){
+  public StudentOrganizationServiceImpl(StudentOrganizationRepository repository) {
 
     this.repository = repository;
 
@@ -37,7 +37,8 @@ public class StudentOrganizationServiceImpl implements StudentOrganizationServic
     }
 
     Response<List<StudentOrganizationDto>> response = new Response<>();
-    response.setDtoT(studentOrganizations.stream().map(StudentOrganizationMapper::mapToStudentOrganizationDto).collect(
+    response.setDtoT(studentOrganizations.stream()
+        .map(StudentOrganizationMapper::mapToStudentOrganizationDto).collect(
         Collectors.toList()));
     response.setMessage("All student organizations successfully found!");
 

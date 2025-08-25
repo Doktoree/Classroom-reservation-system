@@ -15,6 +15,7 @@ import doktoree.backend.domain.ReservationStatus;
 public interface ReservationStatusRepository extends JpaRepository<ReservationStatus, Long> {
 
   public Page<ReservationStatus> findAll(Pageable pageable);
+
   Page<ReservationStatus> findByStatusOrderByIdDesc(Status status, Pageable pageable);
 
 }

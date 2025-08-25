@@ -17,12 +17,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DepartmentServiceImpl implements DepartmentService{
+public class DepartmentServiceImpl implements DepartmentService {
 
   private final DepartmentRepository departmentRepository;
 
   @Autowired
-  public DepartmentServiceImpl(DepartmentRepository departmentRepository){
+  public DepartmentServiceImpl(DepartmentRepository departmentRepository) {
 
     this.departmentRepository = departmentRepository;
 

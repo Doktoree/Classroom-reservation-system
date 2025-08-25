@@ -200,7 +200,7 @@ public class ReservationServiceImpl implements ReservationService {
 					updatedReservation.getUser());
 			ReservationNotification savedRn = notificationRepository
 					.save(rn);
-			if(!classrooms.equals(exOptionalReservation.getClassrooms())) {
+			if (!classrooms.equals(exOptionalReservation.getClassrooms())) {
 				mailService.sendEmailChangeClassrooms(savedRn);
 			}
 			ReservationDto updatedReservationDto = ReservationMapper

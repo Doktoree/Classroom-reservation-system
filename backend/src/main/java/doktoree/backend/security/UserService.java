@@ -62,12 +62,10 @@ public class UserService {
         Optional<User> optionalUser = userRepository
                 .findByEmail(loginDto.getEmail());
 
-        if(optionalUser.isEmpty()){
-
+        if (optionalUser.isEmpty()) {
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Wrong password or email!");
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-
         }
 
         User user = optionalUser.get();

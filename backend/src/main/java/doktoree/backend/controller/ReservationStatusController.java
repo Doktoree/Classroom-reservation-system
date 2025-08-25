@@ -92,17 +92,21 @@ public class ReservationStatusController {
 			@RequestParam(defaultValue = "0") int pageNumber
 	) {
 
-		return ResponseEntity.ok(reservationStatusService.getAllReservationStatus(pageNumber));
+		return ResponseEntity.ok(reservationStatusService
+				.getAllReservationStatus(pageNumber));
 
 	}
 
 	@PostMapping("status/")
-	public ResponseEntity<Response<List<ReservationStatusDto>>> getAllReservationStatusesByStatus(
+	public ResponseEntity<Response<List<ReservationStatusDto>>>
+	getAllReservationStatusesByStatus(
 			@RequestParam(defaultValue = "0") int pageNumber,
 			@RequestBody ReservationStatusDto reservationStatusDto
 	) {
 
-		return ResponseEntity.ok(reservationStatusService.getAllReservationStatusByStatus(pageNumber,reservationStatusDto));
+		return ResponseEntity.ok(reservationStatusService
+				.getAllReservationStatusByStatus(pageNumber,
+						reservationStatusDto));
 
 	}
 	

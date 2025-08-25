@@ -17,7 +17,7 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class DepartmentDto{
+public class DepartmentDto {
 
   private Long id;
 
