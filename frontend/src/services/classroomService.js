@@ -1,6 +1,6 @@
 import fetchWithAuth from "./authService";
 
-const apiUrl = "http://localhost:8080/api/classroom/";
+const apiUrl = "http://classroomreservationsystem.dmfvg0frgje3czah.italynorth.azurecontainer.io:8080/api/classroom/";
 
 export async function getClassroom(id) {
    

@@ -80,7 +80,7 @@ return (
       </table>
       {
         !isHidden && (
-          <button onClick={handleNextPage}>Next page</button>
+          <button className="reservationTable-button" onClick={handleNextPage}>Next page</button>
         )
       }
       

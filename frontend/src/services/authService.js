@@ -1,5 +1,4 @@
-//const apiUrl = "http://classroomreservationsystem.dmfvg0frgje3czah.italynorth.azurecontainer.io:8080/api/auth";
-const apiUrl = "http://localhost:8080/api/auth";
+const apiUrl = "http://classroomreservationsystem.dmfvg0frgje3czah.italynorth.azurecontainer.io:8080/api/auth";
 
 const fetchWithAuth = async (url, options = {}) => {
   const token = localStorage.getItem("token");
